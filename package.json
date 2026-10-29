@@ -1,0 +1,42 @@
+{
+  "name": "bookchange",
+  "private": true,
+  "packageManager": "yarn@1.22.22+sha1.ac34549e6aa8e7ead463a7407e1c7390f61a6610",
+  "devDependencies": {
+    "@herb-tools/formatter": "^0.11.1",
+    "@herb-tools/linter": "^0.11.1",
+    "esbuild": "^0.28.2",
+    "oxfmt": "^0.75.0",
+    "oxlint": "^1.90.0"
+  },
+  "scripts": {
+    "build": "esbuild app/javascript/*.* --bundle --sourcemap --format=esm --outdir=app/assets/builds --public-path=/assets",
+    "build:css:compile": "sass ./app/assets/stylesheets/application.bootstrap.scss:./app/assets/builds/application.css --no-source-map --quiet-deps --load-path=node_modules",
+    "build:css:prefix": "postcss ./app/assets/builds/application.css --use=autoprefixer --output=./app/assets/builds/application.css",
+    "build:css": "yarn build:css:compile && yarn build:css:prefix",
+    "lint:js": "oxlint app/javascript",
+    "lint:js:fix": "oxlint --fix app/javascript",
+    "format:js": "oxfmt app/javascript",
+    "format:js:check": "oxfmt --check app/javascript",
+    "lint:erb": "herb-lint",
+    "lint:erb:fix": "herb-lint --fix",
+    "format:erb": "herb-format",
+    "format:erb:check": "herb-format --check",
+    "watch:css": "nodemon --watch ./app/assets/stylesheets/ --ext scss --exec \"yarn build:css\""
+  },
+  "dependencies": {
+    "@hotwired/stimulus": "^3.2.2",
+    "@hotwired/turbo-rails": "^8.0.23",
+    "@popperjs/core": "^2.11.8",
+    "autoprefixer": "^10.6.2",
+    "bootstrap": "^5.3.8",
+    "bootstrap-icons": "^1.13.2",
+    "nodemon": "^3.1.14",
+    "postcss": "^8.5.32",
+    "postcss-cli": "^12.0.0",
+    "sass": "^1.107.0"
+  },
+  "browserslist": [
+    "defaults"
+  ]
+}
