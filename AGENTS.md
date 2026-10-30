@@ -22,6 +22,7 @@ https://github.com/rbndickson/bookchange
 ## Workflow
 
 - Ask questions when not totally sure what action is required; ensure all questions are answered before continuing
+- Follow the feature order in `.specify/memory/roadmap.md` and keep its statuses up to date
 - Keep to the required task without doing additional tasks
 - Do not add gems or packages (Gemfile, `package.json`); ask the project owner to add them
 - Work on this project inside a Docker Sandbox started with `sbx run claude` from the project
