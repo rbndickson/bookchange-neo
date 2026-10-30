@@ -4,7 +4,7 @@
 
 **Created**: 2026-10-30
 
-**Status**: Draft
+**Status**: Complete
 
 **Input**: User description: "We will do the first feature on the roadmap" (Roadmap feature 1:
 Sign up, log in and log out)
