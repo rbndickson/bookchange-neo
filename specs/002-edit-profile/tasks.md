@@ -148,11 +148,11 @@ Story 3)
 - [X] T023 Check the Update Account and Change Password pages, and the user menu, at 375 px wide with Cuprite (resize the window in a `js: true` example or by hand): no horizontal scrolling; adjust Bootstrap classes in `app/views/users/edit.html.erb` and `app/views/passwords/edit.html.erb` if needed (FR-017, SC-006)
 - [X] T024 Run `bundle exec rspec` (the full suite in `spec/`) and fix any failures
 - [X] T025 [P] Run `bundle exec rubocop` (rules in `.rubocop.yml`) and fix offenses in `app/`, `config/` and `spec/` (`bundle exec rubocop -a` for safe fixes)
-- [ ] T026 [P] Run `yarn lint:js` and `yarn format:js` on `app/javascript` (no JavaScript changes expected)
+- [X] T026 [P] Run `yarn lint:js` and `yarn format:js` on `app/javascript` (no JavaScript changes expected)
 - [X] T027 [P] Run `yarn lint:erb` and `yarn format:erb`, and fix any issues in `app/views`
 - [X] T028 [P] Run `bin/brakeman --no-pager` and `bin/bundler-audit`; fix any warnings, or record the project owner's accepted reason in `config/brakeman.ignore` (Principle V)
 - [X] T029 Walk through quickstart.md's Manual walkthrough (steps 1–15) with `bin/dev` and record any differences from the spec
-- [ ] T030 Update feature 2's Status in `.specify/memory/roadmap.md` to "In progress" when implementation starts and "Done" when T024–T029 pass
+- [X] T030 Update feature 2's Status in `.specify/memory/roadmap.md` to "In progress" when implementation starts and "Done" when T024–T029 pass
 
 ---
 

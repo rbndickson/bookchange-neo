@@ -17,7 +17,7 @@ history. Each feature builds on the ones before it.
 | # | Feature | Added in original | Original reference | Status | Spec |
 |---|---|---|---|---|---|
 | 1 | Sign up, log in and log out | 2016-01-06 – 01-08 | `UsersController#new/create`, `SessionsController`, `PagesController#front` | Done | [spec](../../specs/001-sign-up-log-in/spec.md) |
-| 2 | Edit profile | 2016-01-13 | `UsersController#edit/update` | In progress | [spec](../../specs/002-edit-profile/spec.md) |
+| 2 | Edit profile | 2016-01-13 | `UsersController#edit/update` | Done | [spec](../../specs/002-edit-profile/spec.md) |
 | 3 | Add a book, with ISBN lookup | 2016-01-13 – 01-20 | `BooksController#new/create/autofill`, `BookInformation`, `GoogleBook`, `WorldcatBook`, `PagesController#home` | Not started | |
 | 4 | My Books: edit and remove books | 2016-01-21 – 01-22 | `PagesController#my_books`, `BooksController#edit/update/destroy` | Not started | |
 | 5 | User page with their books | 2016-01-22 | `UsersController#show` | Not started | |
