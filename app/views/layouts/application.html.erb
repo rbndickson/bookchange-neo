@@ -24,6 +24,11 @@
   </head>
 
   <body>
-    <%= yield %>
+    <%= render "shared/header" %>
+
+    <main class="container">
+      <%= render "shared/messages" %>
+      <%= yield %>
+    </main>
   </body>
 </html>
