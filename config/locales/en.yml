@@ -29,3 +29,15 @@
 
 en:
   hello: "Hello world"
+  activerecord:
+    attributes:
+      user:
+        password_confirmation: "Confirm Password"
+    errors:
+      models:
+        user:
+          attributes:
+            email:
+              taken: "cannot be used"
+            password:
+              password_too_long: "is too long (maximum is 72 characters)"
