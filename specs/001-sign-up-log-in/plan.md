@@ -54,7 +54,7 @@ Bootstrap's existing data attributes; pages usable at 375 px wide (SC-005)
 | III. Rails Conventions & Hotwire | RESTful `users#create`, conventional controllers, ERB views, Bootstrap 5 and Bootstrap Icons. Turbo handles forms (422 on invalid sign up). No JavaScript framework; no Stimulus controller needed. | Pass |
 | IV. Tested Behavior | Acceptance tests per user story in `spec/features` (Cuprite for the dropdown and closing messages); `User` model specs; fabricators `:user`, `:alice`, `:bob`; no controller tests; no external services. | Pass |
 | V. Quality & Security Gates | RuboCop, oxlint/oxfmt, Herb, Brakeman and bundler-audit run before completion. Security fixes KI-002, KI-006, KI-007, KI-008 in the design. | Pass |
-| VI. Scope Discipline & Simplicity | bcrypt approved by the owner (R-001). Chromium is a sandbox system package, not a `Gemfile` or `package.json` change (R-003). Hand-written sessions chosen over the generator as the simpler fit (R-002). Later features' header links and pages left out. | Pass |
+| VI. Scope Discipline & Simplicity | bcrypt approved by the owner (R-001). Chromium is a sandbox-only download, not a `Gemfile` or `package.json` change (R-003). Hand-written sessions chosen over the generator as the simpler fit (R-002). Later features' header links and pages left out. | Pass |
 | Coding Style | Original's names (`current_user`, `require_user`, `access_denied`, `log_in` helper, `:alice`/`:bob`); `normalizes` and `authenticate_by` per "better way"; flash keys `:success` and `:danger`, plus `:info` for log out as in the original (spec FR-019). | Pass |
 
 **Post-design re-check (after Phase 1)**: Pass. The data model, routes contract and quickstart
@@ -142,9 +142,8 @@ original's `users/_form` partial is not needed yet (only Sign Up uses the form u
 
 ## Implementation Notes
 
-- **Environment first**: install Ruby 4.0.9 and Chromium in the sandbox, then the README's
-  Installation steps; confirm bcrypt is uncommented before `bundle install` (quickstart
-  Prerequisites).
+- **Environment**: already set up in the sandbox (Ruby 4.0.9, Yarn, PostgreSQL, Chromium,
+  gems including bcrypt, packages, assets, databases); see quickstart Prerequisites.
 - **`rails_helper.rb`**: uncomment the `spec/support` loader line.
 - **`hello_controller.js`**: Rails' example Stimulus controller is left alone; removing it is
   outside this feature's scope.

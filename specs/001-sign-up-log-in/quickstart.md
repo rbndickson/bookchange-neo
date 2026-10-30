@@ -8,12 +8,11 @@ How to check the feature works, automatically and by hand. Routes and messages a
 
 ## Prerequisites
 
-- Inside the Docker Sandbox (`sbx run claude`), with the README's Installation steps done
-  (Ruby 4.0.9, `bundle install`, `yarn install`, `bin/rails db:prepare`).
-- `gem 'bcrypt'` uncommented in the `Gemfile` by the project owner, then `bundle install`
-  (R-001).
-- Chromium installed in the sandbox for JavaScript tests (R-003); check with
-  `chromium --version`.
+- Inside the Docker Sandbox (`sbx run claude`). Its environment was set up on 2026-10-30
+  (Ruby 4.0.9, Yarn, PostgreSQL, Chromium for JavaScript tests (R-003), gems including
+  bcrypt, JavaScript packages, assets and databases).
+- PostgreSQL running: after a sandbox restart, `sudo service postgresql start`, then check
+  with `pg_isready`.
 
 ## Automated checks
 

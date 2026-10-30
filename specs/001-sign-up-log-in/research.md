@@ -36,14 +36,18 @@ Decisions made while planning. R-001 to R-003 were confirmed by the project owne
 
 ## R-003: Browser for JavaScript acceptance tests
 
-- **Decision**: Install Chromium with `apt` in the Docker Sandbox during implementation, for
-  Cuprite. CI's `ubuntu-latest` runner already has Chrome.
+- **Decision**: Use Playwright's Chromium build in the Docker Sandbox for Cuprite, found
+  through `BROWSER_PATH` in `/etc/sandbox-persistent.sh`. CI's `ubuntu-latest` runner already
+  has Chrome.
 - **Rationale**: The user menu dropdown and closing messages need JavaScript (Bootstrap), and
   the constitution requires Cuprite where JavaScript is involved (Principle IV). No `Gemfile`
   or `package.json` change.
-- **Notes**: Ruby 4.0.9 is also not installed in the sandbox yet; the README's Installation
-  steps are done at the start of implementation. Chromium running as root in a container
-  needs the `no-sandbox` browser option; the Cuprite driver sets it.
+- **Alternatives considered**: Ubuntu's `chromium` package (only a snap, which does not run in
+  a container) and Google Chrome (no build for ARM Linux; the sandbox is aarch64).
+- **Notes**: Installed on 2026-10-30 with `npx playwright install chromium` (Playwright is not
+  added to `package.json`), with the Ubuntu 24.04 ARM build because Playwright does not yet
+  recognize Ubuntu 26.04, plus the system libraries Chromium needs. The `no-sandbox` browser
+  option is set in the Cuprite driver, as is usual for Chromium in a container.
 
 ## R-004: Even timing for failed log ins (KI-008)
 
