@@ -8,19 +8,22 @@ Decisions made while planning. Rails behavior was checked against the installed
 
 ## R-001: Password validations when the password is not being changed
 
-- **Decision**: Run the `User` password length and confirmation presence validations only for
-  a new user or when a new password is set:
-  `validates :password, length: { minimum: 8 }, if: :password_required?` and the same for
-  `validates :password_confirmation, presence: true`, with
-  `def password_required? = new_record? || !password.nil?`.
-- **Rationale**: Checked in a Rails runner: today `User.find(id).update(username: 'yy')` fails
-  with "Password is too short (minimum is 8 characters)" and "Confirm Password can't be blank",
-  because a loaded user's `password` is `nil` and the minimum length check does not skip `nil`.
-  Sign Up keeps exactly the messages it has now (001/R-008), including "is too short" for a
-  blank password.
+- **Decision**: Run the `User` password length and confirmation presence validations only on
+  the forms that set a password: `validates :password, length: { minimum: 8 }, on: [:create,
+  :change_password]` and `validates :password_confirmation, presence: true, on: [:create,
+  :change_password]` (Sign Up and Change Password, R-003).
+- **Rationale**: Checked in a Rails runner: before this change `User.find(id).update(username:
+  'yy')` failed with "Password is too short (minimum is 8 characters)" and "Confirm Password
+  can't be blank", because a loaded user's `password` is `nil` and the minimum length check does
+  not skip `nil`. Naming the two forms says plainly where the rules apply. Sign Up keeps exactly
+  the messages it had (001/R-008), including "is too short" for a blank password.
+- **Note**: Code that sets a password another way, such as password reset in feature 14, must
+  save in the `:change_password` context or add its own, or the length rule will not run (the
+  72-byte limit from `has_secure_password` always runs).
 - **Alternatives considered**: `allow_nil: true` on the length check (a blank Sign Up password
-  would lose its "is too short" message, a visible change to feature 1); `on: :create` only
-  (lets any later code, such as password reset in feature 14, save a short password).
+  would lose its "is too short" message, a visible change to feature 1); a
+  `password_required?` condition (`new_record? || !password.nil?`, plus the
+  `:change_password` context), used at first and replaced as harder to read.
 
 ## R-002: Current Password on Update Account (KI-017)
 
@@ -48,8 +51,7 @@ Decisions made while planning. Rails behavior was checked against the installed
   context: `PasswordsController#update` assigns `current_password`, `password` and
   `password_confirmation` to `current_user` and saves with `save(context: :change_password)`.
   In that context `User` requires `current_password` and checks it (R-002), requires
-  `password` ("can't be blank"), and applies the length and confirmation rules
-  (`password_required?`). The current password is checked against `password_digest_was`, as
+  `password` ("can't be blank"), and applies the length and confirmation rules (R-001). The current password is checked against `password_digest_was`, as
   the new password is already assigned when validations run.
 - **Mismatch message**: "The passwords do not match", shown without a field name on Sign Up and
   Change Password, using `config.active_model.i18n_customize_full_message` and a `format:

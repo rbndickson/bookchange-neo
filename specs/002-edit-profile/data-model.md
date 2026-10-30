@@ -13,7 +13,7 @@ indexes, normalization and the email and username rules are unchanged.
 
 | Change | Detail | Research |
 |---|---|---|
-| Password rules only when needed | Minimum 8 characters and Confirm Password presence apply to a new user, or when a password is set (`password_required?`) | R-001 |
+| Password rules only when needed | Minimum 8 characters and Confirm Password presence apply on Sign Up and Change Password (`:create` and `:change_password` contexts) | R-001 |
 | `current_password` virtual attribute | On every Update Account save and password change (`:update_account` and `:change_password` contexts): required ("can't be blank") and must match the saved password ("is incorrect") | R-002 |
 | Change Password rules | In the `:change_password` context, `password` is required ("can't be blank") and the length and confirmation rules apply | R-003 |
 | Mismatch message | "The passwords do not match", shown without a field name (Sign Up and Change Password) | R-003 |

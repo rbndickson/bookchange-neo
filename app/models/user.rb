@@ -17,8 +17,8 @@ class User < ApplicationRecord
                        length: { in: 2..20, allow_blank: true },
                        uniqueness: { case_sensitive: false }
   validates :password, presence: true, on: :change_password
-  validates :password, length: { minimum: 8 }, if: :password_required?
-  validates :password_confirmation, presence: true, if: :password_required?
+  validates :password, length: { minimum: 8 }, on: [:create, :change_password]
+  validates :password_confirmation, presence: true, on: [:create, :change_password]
 
   attr_accessor :current_password
 
@@ -26,8 +26,6 @@ class User < ApplicationRecord
   validate :current_password_correct, on: [:update_account, :change_password], if: -> { current_password.present? }
 
   private
-
-  def password_required? = new_record? || !password.nil? || validation_context == :change_password
 
   def current_password_correct
     # Checked against the saved password, as a new one may already be set on this record.

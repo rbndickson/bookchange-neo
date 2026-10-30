@@ -88,8 +88,8 @@ app/
 │   └── users_controller.rb         # add edit, update (rate limited), set_user,
 │                                   # require_correct_user
 ├── models/
-│   └── user.rb                     # password_required?, current_password, validation
-│                                   # contexts, generates_token_for :session
+│   └── user.rb                     # password rules per form, current_password,
+│                                   # validation contexts, generates_token_for :session
 └── views/
     ├── passwords/
     │   └── edit.html.erb           # new: Change Password

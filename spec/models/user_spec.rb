@@ -83,16 +83,6 @@ describe User, type: :model do
       it 'is not needed to update other fields' do
         expect(saved_alice.update(username: 'alice2')).to be(true)
       end
-
-      it 'is at least 8 characters when a new one is set' do
-        saved_alice.update(password: 'short', password_confirmation: 'short')
-        expect(saved_alice.errors[:password]).to eq(['is too short (minimum is 8 characters)'])
-      end
-
-      it 'needs a confirmation when a new one is set' do
-        saved_alice.update(password: 'newpassword')
-        expect(saved_alice.errors[:password_confirmation]).to eq(["Confirm Password can't be blank"])
-      end
     end
   end
 
@@ -165,6 +155,17 @@ describe User, type: :model do
       change_password(password: '', confirmation: '')
       expect(saved_alice.errors[:password]).to eq(["can't be blank", 'is too short (minimum is 8 characters)'])
       expect(saved_alice.errors[:password_confirmation]).to eq(["Confirm Password can't be blank"])
+    end
+
+    it 'is at least 8 characters' do
+      change_password(password: 'short')
+      expect(saved_alice.errors[:password]).to eq(['is too short (minimum is 8 characters)'])
+    end
+
+    it 'needs a confirmation' do
+      change_password(confirmation: '')
+      expect(saved_alice.errors[:password_confirmation])
+        .to eq(['The passwords do not match', "Confirm Password can't be blank"])
     end
 
     it 'leaves the password unchanged when invalid' do
