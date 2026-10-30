@@ -1,7 +1,7 @@
 class SessionsController < ApplicationController
   rate_limit to: 10, within: 3.minutes, only: :create,
              with: -> { redirect_to login_path, flash: { danger: t('.rate_limited') } }
-  before_action :redirect_logged_in_user, only: [:new, :create]
+  before_action :redirect_logged_in_user_to_home_path, only: [:new, :create]
 
   def new; end
 

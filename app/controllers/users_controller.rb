@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :redirect_logged_in_user
+  before_action :redirect_logged_in_user_to_home_path
 
   def new
     @user = User.new
