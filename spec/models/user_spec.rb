@@ -22,7 +22,7 @@ describe User, type: :model do
 
   it { is_expected.to validate_presence_of(:password) }
   it { is_expected.to validate_length_of(:password).is_at_least(8) }
-  it { is_expected.to validate_confirmation_of(:password) }
+  it { is_expected.to validate_confirmation_of(:password).with_message('The passwords do not match') }
   it { is_expected.to validate_presence_of(:password_confirmation) }
 
   def errors_on(attribute, **attributes)
@@ -76,6 +76,102 @@ describe User, type: :model do
       expect(errors_on(:password, password: password, password_confirmation: password))
         .to eq(['is too long (maximum is 72 characters)'])
     end
+
+    context 'when the user is saved' do
+      let(:saved_alice) { described_class.find(alice.id) }
+
+      it 'is not needed to update other fields' do
+        expect(saved_alice.update(username: 'alice2')).to be(true)
+      end
+    end
+  end
+
+  describe 'current password' do
+    let(:saved_alice) { described_class.find(alice.id) }
+
+    def update_account(current_password, username: 'alice2')
+      saved_alice.assign_attributes(username: username, current_password: current_password)
+      saved_alice.save(context: :update_account)
+    end
+
+    it 'is needed to update the account' do
+      update_account(nil)
+      expect(saved_alice.errors[:current_password]).to eq(["can't be blank"])
+    end
+
+    it 'shows only the blank error when blank' do
+      update_account('')
+      expect(saved_alice.errors[:current_password]).to eq(["can't be blank"])
+    end
+
+    it 'must be correct' do
+      update_account('wrong password')
+      expect(saved_alice.errors[:current_password]).to eq(['is incorrect'])
+    end
+
+    it 'updates the account when correct' do
+      expect(update_account('password')).to be(true)
+      expect(saved_alice.reload.username).to eq('alice2')
+    end
+
+    it 'is needed even when nothing changes' do
+      expect(update_account('', username: 'alice')).to be(false)
+    end
+
+    it 'is not needed for other updates' do
+      expect(saved_alice.update(username: 'alice2')).to be(true)
+    end
+  end
+
+  describe 'changing the password' do
+    let(:saved_alice) { described_class.find(alice.id) }
+
+    def change_password(current_password: 'password', password: 'newpassword', confirmation: password)
+      saved_alice.assign_attributes(current_password: current_password, password: password,
+                                    password_confirmation: confirmation)
+      saved_alice.save(context: :change_password)
+    end
+
+    it 'changes the password with the current password' do
+      expect(change_password).to be(true)
+      expect(saved_alice.reload.authenticate('newpassword')).to eq(saved_alice)
+    end
+
+    it 'accepts the current password as the new one' do
+      expect(change_password(password: 'password')).to be(true)
+    end
+
+    it 'needs the current password' do
+      change_password(current_password: '')
+      expect(saved_alice.errors[:current_password]).to eq(["can't be blank"])
+    end
+
+    it 'checks the current password, not the new one' do
+      change_password(current_password: 'newpassword')
+      expect(saved_alice.errors[:current_password]).to eq(['is incorrect'])
+    end
+
+    it 'needs a new password, as on Sign Up' do
+      change_password(password: '', confirmation: '')
+      expect(saved_alice.errors[:password]).to eq(["can't be blank", 'is too short (minimum is 8 characters)'])
+      expect(saved_alice.errors[:password_confirmation]).to eq(["Confirm Password can't be blank"])
+    end
+
+    it 'is at least 8 characters' do
+      change_password(password: 'short')
+      expect(saved_alice.errors[:password]).to eq(['is too short (minimum is 8 characters)'])
+    end
+
+    it 'needs a confirmation' do
+      change_password(confirmation: '')
+      expect(saved_alice.errors[:password_confirmation])
+        .to eq(['The passwords do not match', "Confirm Password can't be blank"])
+    end
+
+    it 'leaves the password unchanged when invalid' do
+      change_password(current_password: 'wrong password')
+      expect(saved_alice.reload.authenticate('password')).to eq(saved_alice)
+    end
   end
 
   describe 'full error messages' do
@@ -84,6 +180,12 @@ describe User, type: :model do
       user = Fabricate.build(:user, email: 'alice@example.com', password_confirmation: '')
       user.valid?
       expect(user.errors.full_messages).to include('Email cannot be used', "Confirm Password can't be blank")
+    end
+
+    it 'does not name the field when the passwords do not match' do
+      user = Fabricate.build(:user, password_confirmation: 'something else')
+      user.valid?
+      expect(user.errors.full_messages).to eq(['The passwords do not match'])
     end
   end
 
@@ -100,6 +202,29 @@ describe User, type: :model do
 
     it 'returns nil for an unknown email' do
       expect(described_class.authenticate_by(email: 'bob@example.com', password: 'password')).to be_nil
+    end
+  end
+
+  describe 'session token' do
+    let(:alices_token) { alice.generate_token_for(:session) }
+
+    it 'finds the user' do
+      expect(described_class.find_by_token_for(:session, alices_token)).to eq(alice)
+    end
+
+    context 'when the password has changed' do
+      before do
+        alices_token
+        alice.update(password: 'newpassword', password_confirmation: 'newpassword')
+      end
+
+      it 'does not find the user with a token made before' do
+        expect(described_class.find_by_token_for(:session, alices_token)).to be_nil
+      end
+
+      it 'finds the user with a new token' do
+        expect(described_class.find_by_token_for(:session, alice.generate_token_for(:session))).to eq(alice)
+      end
     end
   end
 end

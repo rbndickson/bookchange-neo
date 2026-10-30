@@ -1,0 +1,39 @@
+<div class="row justify-content-center">
+  <div class="col-12 col-md-10 col-lg-8 col-xl-6">
+    <h3>Change Password</h3>
+    <hr>
+
+    <%= form_with model: @user, url: password_path, method: :patch do |form| %>
+      <div class="row mb-3">
+        <%= form.label :current_password, "Current Password", class: "col-sm-5 col-form-label" %>
+
+        <div class="col-sm-7">
+          <%= form.password_field :current_password, class: form_control_class(@user, :current_password) %>
+          <%= render "shared/field_errors", record: @user, attribute: :current_password %>
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <%= form.label :password, "Password", class: "col-sm-5 col-form-label" %>
+
+        <div class="col-sm-7">
+          <%= form.password_field :password, class: form_control_class(@user, :password) %>
+          <%= render "shared/field_errors", record: @user, attribute: :password %>
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <%= form.label :password_confirmation, "Confirm Password", class: "col-sm-5 col-form-label" %>
+
+        <div class="col-sm-7">
+          <%= form.password_field :password_confirmation, class: form_control_class(@user, :password_confirmation) %>
+          <%= render "shared/field_errors", record: @user, attribute: :password_confirmation %>
+        </div>
+      </div>
+
+      <div class="text-end">
+        <%= form.submit "Change Password", class: "btn btn-primary" %>
+      </div>
+    <% end %>
+  </div>
+</div>

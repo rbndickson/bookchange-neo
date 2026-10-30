@@ -47,7 +47,7 @@ feature 'user signs up' do
     visit signup_path
     fill_in_sign_up_form(confirmation: 'something else')
     click_button 'Sign Up'
-    expect_field_error('Confirm Password', "Confirm Password doesn't match Password")
+    expect_field_error('Confirm Password', 'The passwords do not match')
     expect(User.count).to eq(0)
   end
 
@@ -124,12 +124,6 @@ feature 'user signs up' do
     ['Email', 'Username', 'Password', 'Confirm Password'].each do |label|
       expect(page).to have_field(label)
     end
-  end
-
-  def expect_field_error(label, message)
-    field = find_field(label)
-    expect(field[:class]).to include('is-invalid')
-    expect(page).to have_css("##{field[:id]} ~ .invalid-feedback", text: message)
   end
 
   def expect_to_be_logged_out

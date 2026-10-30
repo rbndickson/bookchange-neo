@@ -54,7 +54,7 @@ its label.
 | `password` | present on create (`has_secure_password`) | can't be blank | FR-002 |
 | `password` | at least 8 characters | is too short (minimum is 8 characters) | FR-003 |
 | `password` | at most 72 bytes (`has_secure_password`) | is too long (maximum is 72 characters) | FR-003, KI-004, R-008 |
-| `password` | matches confirmation (`has_secure_password`) | doesn't match Password (on `password_confirmation`) | FR-003 |
+| `password` | matches confirmation (`has_secure_password`) | "The passwords do not match" (on `password_confirmation`, shown without the field name; changed in feature 2) | FR-003 |
 | `password_confirmation` | present | can't be blank | FR-002 |
 
 ### Relationships

@@ -52,8 +52,8 @@ the log in page.
    "Sign Up", **Then** no account is created and they see the form again with an error naming
    each blank field next to it (e.g. "Email can't be blank"), with the other values they entered kept (except passwords).
 5. **Given** a visitor on the Sign Up form, **When** the password and Confirm Password do not
-   match, **Then** no account is created and they see "Confirm Password doesn't match
-   Password".
+   match, **Then** no account is created and they see "The passwords do not match" (changed in
+   feature 2, KI-014).
 6. **Given** a visitor on the Sign Up form, **When** the password is shorter than 8 characters,
    **Then** no account is created and they see "Password is too short (minimum is 8
    characters)".
@@ -247,7 +247,9 @@ Where this app deliberately behaves differently from the original.
 - **KI-014 – Error messages do not name the field**: the original shows only the message next
   to each field (e.g. "can't be blank"). Decision: **fix** – each message starts with the
   field's name (e.g. "Email can't be blank"); the password confirmation is named "Confirm
-  Password", as its label (FR-007).
+  Password", as its label (FR-007). Changed in feature 2 (approved 2026-10-30): a password
+  mismatch shows "The passwords do not match", without a field name, so the same message fits
+  Sign Up and Change Password.
 - **KI-015 – Usernames keep surrounding spaces**: the original saves the username exactly as
   typed, so ` alice ` and `alice` are different usernames that look the same. Decision: **fix**
   – surrounding spaces are removed from the username before it is checked and saved, as with
@@ -367,9 +369,10 @@ a message).
   showing the username, as in the original at the time this feature was added.
 - **Sign Up form labels**: "Email", "Username", "Password", "Confirm Password" and a "Sign Up"
   button; Log In form: "Email", "Password" and a "Log In" button, as in the original.
-- **Error messages** use the standard wording shown in the original ("can't be blank", "doesn't
-  match Password", "is too short (minimum is 8 characters)", "has already been taken"), after
-  the field's name (KI-014), except the duplicate email message (KI-011).
+- **Error messages** use the standard wording shown in the original ("can't be blank", "is too
+  short (minimum is 8 characters)", "has already been taken"), after the field's name (KI-014),
+  except the duplicate email message (KI-011) and the password mismatch message ("The passwords
+  do not match", feature 2).
 - **No account token**: the original also generated a random token for each user on sign up; it
   is only used for password reset, so it is left to roadmap feature 14.
 - **Session length**: the session lasts until log out or the browser is closed, as in the

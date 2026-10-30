@@ -33,6 +33,7 @@ en:
     attributes:
       user:
         password_confirmation: "Confirm Password"
+        current_password: "Current Password"
     errors:
       models:
         user:
@@ -41,6 +42,12 @@ en:
               taken: "cannot be used"
             password:
               password_too_long: "is too long (maximum is 72 characters)"
+            password_confirmation:
+              format: "%{message}"
+              blank: "Confirm Password can't be blank"
+              confirmation: "The passwords do not match"
+            current_password:
+              incorrect: "is incorrect"
   access_denied:
     logged_in: "You do not have access."
     not_logged_in: "You must be logged in to do that."
@@ -50,6 +57,13 @@ en:
       rate_limited: "Try again later."
     destroy:
       logged_out: "You have logged out."
+  passwords:
+    update:
+      changed: "Your password was changed."
+      rate_limited: "Try again later."
   users:
     create:
       joined: "You have joined Bookchange, you can now log in."
+    update:
+      updated: "Your profile was updated."
+      rate_limited: "Try again later."
