@@ -67,8 +67,21 @@ describe User do
       expect(errors_on(:username, username: 'Alice')).to eq(['has already been taken'])
     end
 
-    it 'is saved as typed' do
-      user = Fabricate(:user, username: 'Alice')
+    it 'is unique ignoring surrounding spaces' do
+      alice
+      expect(errors_on(:username, username: ' alice ')).to eq(['has already been taken'])
+    end
+
+    it 'counts its length without surrounding spaces' do
+      expect(errors_on(:username, username: ' a ')).to eq(['is too short (minimum is 2 characters)'])
+    end
+
+    it 'is required when only spaces' do
+      expect(errors_on(:username, username: '   ')).to eq(["can't be blank"])
+    end
+
+    it 'is saved as typed, without surrounding spaces' do
+      user = Fabricate(:user, username: ' Alice ')
       expect(user.reload.username).to eq('Alice')
     end
   end

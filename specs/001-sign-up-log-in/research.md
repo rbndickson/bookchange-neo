@@ -84,7 +84,8 @@ Decisions made while planning. R-001 to R-003 were confirmed by the project owne
   - Email: presence; length maximum 254; format `URI::MailTo::EMAIL_REGEXP`; uniqueness with
     the message "cannot be used" (shown as "Email cannot be used", KI-014). Length and format use `allow_blank: true`, so a
     blank email only shows "can't be blank".
-  - Username: presence; length 2–20; uniqueness with `case_sensitive: false`. Stored and shown
+  - Username: `normalizes :username, with: ->(username) { username.strip }` (KI-015);
+    presence; length 2–20; uniqueness with `case_sensitive: false`. Otherwise stored and shown
     as typed.
   - Database unique indexes back both: on `email` (already lowercase) and on `lower(username)`.
 - **Rationale**: Built-in Rails validations and `normalizes` (Coding Style prefers it). The

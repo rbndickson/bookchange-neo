@@ -13,7 +13,7 @@ column (password reset, roadmap feature 14).
 |---|---|---|---|
 | `id` | bigint | no | Primary key |
 | `email` | string | no | Stored lowercase with surrounding spaces removed (KI-001) |
-| `username` | string | no | Stored as typed |
+| `username` | string | no | Stored as typed, with surrounding spaces removed (KI-015) |
 | `password_digest` | string | no | bcrypt digest (`has_secure_password`, R-001) |
 | `created_at` | datetime | no | |
 | `updated_at` | datetime | no | |
@@ -38,6 +38,7 @@ its label.
 
 - `email`: surrounding spaces removed and lowercased, on assignment and in finders such as
   `authenticate_by` (R-006).
+- `username`: surrounding spaces removed (KI-015); letter case kept.
 
 ### Validations
 

@@ -2,6 +2,7 @@ class User < ApplicationRecord
   has_secure_password
 
   normalizes :email, with: ->(email) { email.strip.downcase }
+  normalizes :username, with: ->(username) { username.strip }
 
   validates :email, presence: true,
                     length: { maximum: 254, allow_blank: true },

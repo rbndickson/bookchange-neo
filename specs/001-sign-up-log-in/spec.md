@@ -21,7 +21,7 @@ feature was first added, the final version of that behavior is the reference (e.
 
 Parts of the original's pages that belong to later roadmap features are left out until those
 features are built (see Assumptions). Approved fixes and accepted behavior are listed under
-Differences from the Original (KI-001 to KI-014).
+Differences from the Original (KI-001 to KI-015).
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -188,6 +188,8 @@ content and the header for each state.
   browser's own check is bypassed (KI-005).
 - Usernames that differ only in letter case (`Alice` and `alice`) count as the same username
   for uniqueness, but each is shown as the user typed it (KI-009).
+- Leading or trailing spaces in a username are removed before it is checked and saved, so
+  ` alice ` is the same username as `alice` and ` a ` is too short (KI-015).
 - Repeated log in attempts from one connection are limited; after 10 in 3 minutes, further
   attempts are refused with "Try again later." until the 3 minutes have passed (KI-007).
 - A user whose session refers to an account that no longer exists is treated as logged out
@@ -246,6 +248,10 @@ Where this app deliberately behaves differently from the original.
   to each field (e.g. "can't be blank"). Decision: **fix** – each message starts with the
   field's name (e.g. "Email can't be blank"); the password confirmation is named "Confirm
   Password", as its label (FR-007).
+- **KI-015 – Usernames keep surrounding spaces**: the original saves the username exactly as
+  typed, so ` alice ` and `alice` are different usernames that look the same. Decision: **fix**
+  – surrounding spaces are removed from the username before it is checked and saved, as with
+  emails (FR-004).
 
 ### Accepted behavior
 
@@ -280,6 +286,7 @@ a message).
 - **FR-004**: Email and username MUST each be unique across all accounts. Emails MUST be stored
   in lowercase with surrounding spaces removed, so uniqueness ignores letter case (KI-001).
   Username uniqueness MUST ignore letter case, while usernames are shown as typed (KI-009).
+  Usernames MUST be stored with surrounding spaces removed (KI-015).
 - **FR-004a**: Signing up with an email that already has an account MUST show the error "Email
   cannot be used" (KI-011).
 - **FR-005**: Passwords MUST be stored so that they cannot be read back (one-way protected), and
