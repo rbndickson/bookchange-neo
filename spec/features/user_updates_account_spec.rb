@@ -114,6 +114,15 @@ feature 'user updates account' do
     expect(alice.reload.username).to eq('alice9')
   end
 
+  scenario 'on a phone-sized screen', :js do
+    page.driver.resize(375, 800)
+    visit edit_user_path(alice)
+    expect_update_account_form
+    expect_no_horizontal_scrolling
+    within('nav') { click_button 'alice' }
+    expect(page).to have_link('Update Account')
+  end
+
   def update_account(email: nil, username: nil, current_password: nil)
     visit edit_user_path(alice)
     fill_in 'Email', with: email unless email.nil?

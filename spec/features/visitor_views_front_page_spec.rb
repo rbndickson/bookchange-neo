@@ -49,10 +49,4 @@ feature 'visitor views the front page' do
     find('.alert .btn-close').click
     expect(page).to have_no_content('You must be logged in to do that.')
   end
-
-  def expect_no_horizontal_scrolling
-    scroll_width = page.evaluate_script('document.documentElement.scrollWidth')
-    client_width = page.evaluate_script('document.documentElement.clientWidth')
-    expect(scroll_width).to be <= client_width
-  end
 end

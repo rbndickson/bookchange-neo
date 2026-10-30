@@ -92,6 +92,13 @@ feature 'user changes password' do
     expect_password_unchanged
   end
 
+  scenario 'on a phone-sized screen', :js do
+    page.driver.resize(375, 800)
+    visit edit_password_path
+    expect(page).to have_css('h3', text: 'Change Password')
+    expect_no_horizontal_scrolling
+  end
+
   def change_password(current_password: 'password', new_password: 'newpassword', confirmation: new_password)
     visit edit_password_path
     fill_in 'Current Password', with: current_password
