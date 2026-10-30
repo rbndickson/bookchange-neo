@@ -1,5 +1,7 @@
 class UsersController < ApplicationController
   before_action :redirect_logged_in_user_to_home_path, only: [:new, :create]
+  # @user is loaded apart from current_user, so after a failed save the header still shows the
+  # saved username. The guards are in the original's order.
   before_action :set_user, only: [:edit, :update]
   before_action :require_user, only: [:edit, :update]
   before_action :require_correct_user, only: [:edit, :update]

@@ -1,3 +1,5 @@
+# The Change Password form. It repeats User's password rules so its messages name the fields
+# "New Password" and "Confirm New Password"; User still checks its own rules when saving.
 class PasswordChange
   include ActiveModel::Model
 
