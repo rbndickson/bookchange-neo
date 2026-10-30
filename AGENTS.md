@@ -14,7 +14,7 @@ https://github.com/rbndickson/bookchange
 - Turbo & Stimulus, bundled with esbuild
 - Bootstrap 5 CSS & Bootstrap Icons, compiled with Sass
 - Solid Queue, Solid Cache & Solid Cable
-- RSpec with Fabrication
+- RSpec with Fabrication and shoulda-matchers
 - Capybara acceptance tests, with Cuprite as the JavaScript driver
 - RuboCop for linting
 - Brakeman & bundler-audit for security checks

@@ -102,7 +102,8 @@ Rationale: a small, owner-controlled scope keeps the rebuild focused and reviewa
 - Turbo and Stimulus, bundled with esbuild; Propshaft for assets.
 - Bootstrap 5 CSS and Bootstrap Icons, compiled with Sass.
 - Solid Queue, Solid Cache and Solid Cable.
-- RSpec with Fabrication; Capybara acceptance tests with Cuprite as the JavaScript driver.
+- RSpec with Fabrication and shoulda-matchers; Capybara acceptance tests with Cuprite as the
+  JavaScript driver.
 - RuboCop (with rubocop-rails and rubocop-rspec), oxlint and oxfmt, Herb.
 - Brakeman, bundler-audit and `yarn audit` for security checks.
 - Development by AI agents takes place inside a Docker Sandbox (`sbx run claude`), not directly
@@ -111,7 +112,7 @@ Rationale: a small, owner-controlled scope keeps the rebuild focused and reviewa
 The original's technology maps to the new stack as follows: HAML → ERB; jQuery and
 CoffeeScript → Stimulus and Turbo; Sidekiq → Solid Queue; Bootstrap 4 alpha → Bootstrap 5.
 Where the original relies on technology with no counterpart in the new stack (e.g.
-Elasticsearch search, Mailgun email, external API clients, shoulda-matchers, Faker, VCR), the
+Elasticsearch search, Mailgun email, external API clients, Faker, VCR), the
 replacement MUST be decided in the feature's plan, preferring what Rails and the existing stack
 provide; any new gem or package needs the project owner's approval (Principle VI).
 
@@ -174,4 +175,4 @@ current Rails, those win. The conventions below are kept unless a better approac
 - Every plan MUST include a Constitution Check, and every review MUST verify compliance; any
   justified exception MUST be documented in the plan's Complexity Tracking.
 
-**Version**: 1.0.0 | **Ratified**: 2026-10-29 | **Last Amended**: 2026-10-29
+**Version**: 1.1.0 | **Ratified**: 2026-10-29 | **Last Amended**: 2026-10-30

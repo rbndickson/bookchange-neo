@@ -28,6 +28,7 @@ group :development, :test do
   gem 'brakeman', require: false # Static analysis for security vulnerabilities
 
   gem 'rspec-rails'
+  gem 'shoulda-matchers'
   gem 'fabrication'
   gem 'capybara'
   gem 'cuprite'

@@ -1,7 +1,29 @@
 require 'rails_helper'
 
-describe User do
+describe User, type: :model do
+  subject { Fabricate.build(:user) }
+
   let(:alice) { Fabricate(:alice) }
+
+  it { is_expected.to have_secure_password }
+
+  it { is_expected.to validate_presence_of(:email) }
+  it { is_expected.to validate_length_of(:email).is_at_most(254) }
+  it { is_expected.to allow_value('alice@example.com').for(:email) }
+  it { is_expected.to allow_value("#{"a" * 242}@example.com").for(:email) }
+  it { is_expected.not_to allow_value('alice').for(:email).with_message('is invalid') }
+  it { is_expected.to validate_uniqueness_of(:email).ignoring_case_sensitivity.with_message('cannot be used') }
+  it { is_expected.to normalize(:email).from(' Alice@Example.com ').to('alice@example.com') }
+
+  it { is_expected.to validate_presence_of(:username) }
+  it { is_expected.to validate_length_of(:username).is_at_least(2).is_at_most(20) }
+  it { is_expected.to validate_uniqueness_of(:username).case_insensitive }
+  it { is_expected.to normalize(:username).from(' Alice ').to('Alice') }
+
+  it { is_expected.to validate_presence_of(:password) }
+  it { is_expected.to validate_length_of(:password).is_at_least(8) }
+  it { is_expected.to validate_confirmation_of(:password) }
+  it { is_expected.to validate_presence_of(:password_confirmation) }
 
   def errors_on(attribute, **attributes)
     user = Fabricate.build(:user, **attributes)
@@ -10,61 +32,23 @@ describe User do
   end
 
   describe 'email' do
-    it 'is required' do
+    it 'shows only the blank error when blank' do
       expect(errors_on(:email, email: '')).to eq(["can't be blank"])
-    end
-
-    it 'must be a valid email' do
-      expect(errors_on(:email, email: 'alice')).to include('is invalid')
-    end
-
-    it 'is at most 254 characters' do
-      email = "#{"a" * 243}@example.com"
-      expect(errors_on(:email, email: email)).to include('is too long (maximum is 254 characters)')
-    end
-
-    it 'allows 254 characters' do
-      email = "#{"a" * 242}@example.com"
-      expect(errors_on(:email, email: email)).to be_empty
-    end
-
-    it 'is unique' do
-      alice
-      expect(errors_on(:email, email: 'alice@example.com')).to eq(['cannot be used'])
     end
 
     it 'is unique ignoring letter case and surrounding spaces' do
       alice
       expect(errors_on(:email, email: ' Alice@Example.com ')).to eq(['cannot be used'])
     end
-
-    it 'is saved in lowercase without surrounding spaces' do
-      user = Fabricate(:user, email: ' Alice@Example.com ')
-      expect(user.reload.email).to eq('alice@example.com')
-    end
   end
 
   describe 'username' do
-    it 'is required' do
+    it 'shows only the blank error when blank' do
       expect(errors_on(:username, username: '')).to eq(["can't be blank"])
     end
 
-    it 'is at least 2 characters' do
-      expect(errors_on(:username, username: 'a')).to eq(['is too short (minimum is 2 characters)'])
-    end
-
-    it 'is at most 20 characters' do
-      expect(errors_on(:username, username: 'a' * 21)).to eq(['is too long (maximum is 20 characters)'])
-    end
-
-    it 'allows 2 to 20 characters' do
-      expect(errors_on(:username, username: 'ab')).to be_empty
-      expect(errors_on(:username, username: 'a' * 20)).to be_empty
-    end
-
-    it 'is unique ignoring letter case' do
-      alice
-      expect(errors_on(:username, username: 'Alice')).to eq(['has already been taken'])
+    it 'shows only the blank error when only spaces' do
+      expect(errors_on(:username, username: '   ')).to eq(["can't be blank"])
     end
 
     it 'is unique ignoring surrounding spaces' do
@@ -75,27 +59,9 @@ describe User do
     it 'counts its length without surrounding spaces' do
       expect(errors_on(:username, username: ' a ')).to eq(['is too short (minimum is 2 characters)'])
     end
-
-    it 'is required when only spaces' do
-      expect(errors_on(:username, username: '   ')).to eq(["can't be blank"])
-    end
-
-    it 'is saved as typed, without surrounding spaces' do
-      user = Fabricate(:user, username: ' Alice ')
-      expect(user.reload.username).to eq('Alice')
-    end
   end
 
   describe 'password' do
-    it 'is required' do
-      expect(errors_on(:password, password: '', password_confirmation: '')).to include("can't be blank")
-    end
-
-    it 'is at least 8 characters' do
-      expect(errors_on(:password, password: 'a' * 7, password_confirmation: 'a' * 7))
-        .to eq(['is too short (minimum is 8 characters)'])
-    end
-
     it 'allows 72 characters' do
       expect(errors_on(:password, password: 'a' * 72, password_confirmation: 'a' * 72)).to be_empty
     end
@@ -109,17 +75,6 @@ describe User do
       password = '😀' * 19
       expect(errors_on(:password, password: password, password_confirmation: password))
         .to eq(['is too long (maximum is 72 characters)'])
-    end
-  end
-
-  describe 'password confirmation' do
-    it 'is required' do
-      expect(errors_on(:password_confirmation, password_confirmation: '')).to include("can't be blank")
-    end
-
-    it 'must match the password' do
-      expect(errors_on(:password_confirmation, password_confirmation: 'something else'))
-        .to eq(["doesn't match Password"])
     end
   end
 
