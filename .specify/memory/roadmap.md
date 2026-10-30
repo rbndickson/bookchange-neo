@@ -39,9 +39,8 @@ history. Each feature builds on the ones before it.
 - Feature 1 needs a simple front page as the root page; its full content comes in feature 15.
 - Responsive design is part of every feature, not a separate step (the original added it at the
   end, in 2016-03).
-- Known technology gaps to resolve in the relevant plans: password hashing (1), book information
-  APIs, including the retired WorldCat API (3), search without Elasticsearch (12), email
-  delivery (14).
+- Known technology gaps to resolve in the relevant plans: book information APIs, including the
+  retired WorldCat API (3), search without Elasticsearch (12), email delivery (14).
 
 ## Not rebuilt
 
