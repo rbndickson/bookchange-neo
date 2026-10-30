@@ -99,36 +99,37 @@ describe User, type: :model do
   describe 'current password' do
     let(:saved_alice) { described_class.find(alice.id) }
 
-    def update_email(current_password)
-      saved_alice.update(email: 'alice2@example.com', current_password: current_password)
+    def update_account(current_password, username: 'alice2')
+      saved_alice.assign_attributes(username: username, current_password: current_password)
+      saved_alice.save(context: :update_account)
     end
 
-    it 'is needed to change the email' do
-      update_email(nil)
+    it 'is needed to update the account' do
+      update_account(nil)
       expect(saved_alice.errors[:current_password]).to eq(["can't be blank"])
     end
 
     it 'shows only the blank error when blank' do
-      update_email('')
+      update_account('')
       expect(saved_alice.errors[:current_password]).to eq(["can't be blank"])
     end
 
-    it 'must be correct to change the email' do
-      update_email('wrong password')
+    it 'must be correct' do
+      update_account('wrong password')
       expect(saved_alice.errors[:current_password]).to eq(['is incorrect'])
     end
 
-    it 'changes the email when correct' do
-      expect(update_email('password')).to be(true)
-      expect(saved_alice.reload.email).to eq('alice2@example.com')
+    it 'updates the account when correct' do
+      expect(update_account('password')).to be(true)
+      expect(saved_alice.reload.username).to eq('alice2')
     end
 
-    it 'is not needed to change the username, and is ignored if wrong' do
-      expect(saved_alice.update(username: 'alice2', current_password: 'wrong password')).to be(true)
+    it 'is needed even when nothing changes' do
+      expect(update_account('', username: 'alice')).to be(false)
     end
 
-    it 'is not needed when the email only differs in letter case and spaces' do
-      expect(saved_alice.update(email: ' Alice@Example.com ')).to be(true)
+    it 'is not needed for other updates' do
+      expect(saved_alice.update(username: 'alice2')).to be(true)
     end
   end
 

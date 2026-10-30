@@ -33,20 +33,23 @@ KI-019).
 - Q: On the Update Account page, should the limit of 10 submissions in 3 minutes count every
   save, or only saves that change the email? → A: Every save, whatever it changes (the simplest
   rule, as with log in).
+- Q: Should changing only the username also need the Current Password? → A: Yes. A Current
+  Password field that is only sometimes needed was confusing, so every Update Account save needs
+  it (changes the KI-017 decision).
 
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Update username or email (Priority: P1)
 
 A logged-in user opens "Update Account" from the user menu in the header, sees a form filled in
-with their current email and username, changes them and saves. They are taken to the home page
+with their current email and username, changes them and saves with their current password. They are taken to the home page
 with a message telling them their profile was updated.
 
 **Why this priority**: It is the core of the feature: users can correct or change the details
 other users will see (the username) and that they log in with (the email).
 
 **Independent Test**: Log in, open the user menu, click "Update Account", change the username,
-click "Update" and confirm the home page shows "Your profile was updated." and the new username
+enter the current password, click "Update" and confirm the home page shows "Your profile was updated." and the new username
 in the header.
 
 **Acceptance Scenarios**:
@@ -57,18 +60,18 @@ in the header.
    "Update Account" page with Email and Username filled in with their current values, an empty
    Current Password field, an "Update" button and a "Change Password" link.
 3. **Given** a logged-in user on the Update Account page, **When** they change the username to
-   a new valid username, leave Current Password blank and click "Update", **Then** the username
-   is saved, they are taken to the home page and see "Your profile was updated.", and the header
+   a new valid username, enter their current password in Current Password and click "Update",
+   **Then** the username is saved, they are taken to the home page and see "Your profile was updated.", and the header
    shows the new username (KI-017).
 4. **Given** a logged-in user on the Update Account page, **When** they change the email to a
    new valid email, enter their current password in Current Password and click "Update",
    **Then** the email is saved, they are taken to the home page and see "Your profile was
    updated.", and they can log in with the new email from then on (KI-017, KI-019).
-5. **Given** a logged-in user on the Update Account page, **When** they change the email and
-   leave Current Password blank, **Then** nothing is saved and they see "Current Password can't
+5. **Given** a logged-in user on the Update Account page, **When** they change the email or
+   username and leave Current Password blank, **Then** nothing is saved and they see "Current Password can't
    be blank" (KI-017).
-6. **Given** a logged-in user on the Update Account page, **When** they change the email and
-   enter a wrong Current Password, **Then** nothing is saved and they see "Current Password is
+6. **Given** a logged-in user on the Update Account page, **When** they change the email or
+   username and enter a wrong Current Password, **Then** nothing is saved and they see "Current Password is
    incorrect" (KI-017).
 7. **Given** a logged-in user on the Update Account page, **When** they clear the email or
    username and click "Update", **Then** nothing is saved and they see the form again with an
@@ -78,7 +81,7 @@ in the header.
    email to ` Bob@Example.com ` with the correct Current Password, **Then** nothing is saved and
    they see "Email cannot be used" (KI-001, KI-011).
 9. **Given** another account with the username `bob`, **When** a user changes their username to
-   `Bob`, **Then** nothing is saved and they see "Username has already been taken" (KI-009).
+   `Bob` with the correct Current Password, **Then** nothing is saved and they see "Username has already been taken" (KI-009).
 10. **Given** a logged-in user on the Update Account page, **When** they enter an invalid email
     (e.g. `alice`), an email longer than 254 characters, or a username shorter than 2 or longer
     than 20 characters, **Then** nothing is saved and they see the same error as on Sign Up
@@ -165,15 +168,13 @@ page is shown; logged in as another user, visit it and confirm the home page is 
 
 ### Edge Cases
 
-- Saving the Update Account form without changing anything succeeds with "Your profile was
-  updated." and needs no Current Password.
+- Saving the Update Account form without changing anything, with the correct Current Password,
+  succeeds with "Your profile was updated."
 - Changing the email only in letter case or surrounding spaces (e.g. ` Alice@Example.com ` when
-  the email is `alice@example.com`) is not a change of email (KI-001), so no Current Password is
-  needed and the email stays the same.
+  the email is `alice@example.com`) is not a change of email (KI-001), so the email stays the
+  same.
 - Changing the username only in letter case (`alice` to `Alice`) is allowed; it is the same
   user's own username (KI-009).
-- On the Update Account page, Current Password is only checked when the email changes; if it is
-  filled in for a username-only change it is ignored.
 - After a failed save, the header still shows the saved username, not the one typed into the
   form.
 - If a save fails for any reason, nothing is changed, including any valid fields in the same
@@ -200,7 +201,8 @@ feature 1 and are referred to by the requirements below.
 - **KI-017 – Current password not asked for**: the original never asks for the current
   password, so anyone using a logged-in browser (for example a shared computer) can change the
   account's email and password and take it over. Decision: **fix** – the correct current
-  password is needed to change the email or the password, but not the username; submissions of
+  password is needed for every Update Account save and every password change (Clarifications);
+  submissions of
   each form are limited to 10 per connection within 3 minutes, as with log in (KI-007), so the
   current password cannot be guessed without limit (FR-005, FR-010, FR-013).
 - **KI-018 – Other sessions stay logged in after a password change**: in the original, other
@@ -226,12 +228,12 @@ feature 1 and are referred to by the requirements below.
   and Username filled in with the user's saved values, an empty Current Password field and an
   "Update" button, and a "Change Password" link to the Change Password page (KI-016).
 - **FR-003**: Users MUST be able to change their username under the same rules and messages as
-  Sign Up (feature 1: FR-002, FR-002b, FR-004, FR-007), without their current password.
+  Sign Up (feature 1: FR-002, FR-002b, FR-004, FR-007).
 - **FR-004**: Users MUST be able to change their email under the same rules, normalization and
   messages as Sign Up (feature 1: FR-002, FR-002a, FR-002b, FR-004, FR-004a, FR-007); a changed
   email takes effect at once, without confirmation (KI-019).
-- **FR-005**: Changing the email MUST need the user's current password in Current Password: a
-  blank one MUST show "Current Password can't be blank" and a wrong one "Current Password is
+- **FR-005**: Every Update Account save MUST need the user's current password in Current
+  Password: a blank one MUST show "Current Password can't be blank" and a wrong one "Current Password is
   incorrect" (KI-017).
 - **FR-006**: On a successful save the user MUST be taken to the home page with the message
   "Your profile was updated."
@@ -284,8 +286,8 @@ feature 1 and are referred to by the requirements below.
 - **SC-001**: A logged-in user can change their username in under 1 minute from any page.
 - **SC-002**: 100% of the acceptance scenarios in this spec pass as automated browser tests.
 - **SC-003**: In 100% of attempts, a user cannot view or change another user's account.
-- **SC-004**: In 100% of attempts, the email or password cannot be changed without the correct
-  current password.
+- **SC-004**: In 100% of attempts, the email, username or password cannot be changed without the
+  correct current password.
 - **SC-005**: After a password change, 100% of the account's other sessions are logged out on
   their next request.
 - **SC-006**: Both pages can be used at a 375 pixel wide screen without horizontal scrolling.

@@ -24,7 +24,7 @@ feature 'user updates account' do
   end
 
   scenario 'changes the username' do
-    update_account(username: 'alice2')
+    update_account(username: 'alice2', current_password: 'password')
     expect_profile_updated
     within('nav') { expect(page).to have_content('alice2') }
     expect(alice.reload.username).to eq('alice2')
@@ -38,20 +38,26 @@ feature 'user updates account' do
   end
 
   scenario 'changes the email with a blank current password' do
-    update_account(email: 'alice2@example.com')
+    update_account(email: 'alice2@example.com', current_password: '')
     expect_field_error('Current Password', "Current Password can't be blank")
     expect(alice.reload.email).to eq('alice@example.com')
   end
 
-  scenario 'changes the email with a wrong current password' do
-    update_account(email: 'alice2@example.com', current_password: 'wrong password')
+  scenario 'changes the username with a blank current password' do
+    update_account(username: 'alice2', current_password: '')
+    expect_field_error('Current Password', "Current Password can't be blank")
+    expect(alice.reload.username).to eq('alice')
+  end
+
+  scenario 'changes the username with a wrong current password' do
+    update_account(username: 'alice2', current_password: 'wrong password')
     expect_field_error('Current Password', 'Current Password is incorrect')
     expect(find_field('Current Password').value).to be_blank
-    expect(alice.reload.email).to eq('alice@example.com')
+    expect(alice.reload.username).to eq('alice')
   end
 
   scenario 'with a blank email and username' do
-    update_account(email: '', username: '')
+    update_account(email: '', username: '', current_password: 'password')
     expect_field_error('Email', "Email can't be blank")
     expect_field_error('Username', "Username can't be blank")
     expect(alice.reload.username).to eq('alice')
@@ -75,7 +81,7 @@ feature 'user updates account' do
 
   scenario 'with a username that is already taken' do
     Fabricate(:bob)
-    update_account(username: 'Bob')
+    update_account(username: 'Bob', current_password: 'password')
     expect_field_error('Username', 'Username has already been taken')
   end
 
@@ -91,24 +97,24 @@ feature 'user updates account' do
   end
 
   scenario 'with a username that is too short' do
-    update_account(username: 'a')
+    update_account(username: 'a', current_password: 'password')
     expect_field_error('Username', 'Username is too short (minimum is 2 characters)')
   end
 
   scenario 'changes the username only in letter case' do
-    update_account(username: 'Alice')
+    update_account(username: 'Alice', current_password: 'password')
     expect_profile_updated
     expect(alice.reload.username).to eq('Alice')
   end
 
   scenario 'saves without changes' do
-    update_account
+    update_account(current_password: 'password')
     expect_profile_updated
   end
 
   scenario 'saves more than 10 times within 3 minutes' do
-    10.times { |number| update_account(username: "alice#{number}") }
-    update_account(username: 'alice10')
+    10.times { |number| update_account(username: "alice#{number}", current_password: 'password') }
+    update_account(username: 'alice10', current_password: 'password')
     expect(page).to have_current_path(edit_user_path(alice))
     expect(page).to have_content('Try again later.')
     expect(alice.reload.username).to eq('alice9')

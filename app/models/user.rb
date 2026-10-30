@@ -21,9 +21,8 @@ class User < ApplicationRecord
 
   attr_accessor :current_password
 
-  validates :current_password, presence: true, on: :update, if: :will_save_change_to_email?
-  validate :current_password_correct, on: :update,
-                                      if: -> { will_save_change_to_email? && current_password.present? }
+  validates :current_password, presence: true, on: :update_account
+  validate :current_password_correct, on: :update_account, if: -> { current_password.present? }
 
   private
 

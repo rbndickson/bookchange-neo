@@ -24,7 +24,9 @@ class UsersController < ApplicationController
   end
 
   def update
-    if @user.update(update_params)
+    @user.assign_attributes(update_params)
+
+    if @user.save(context: :update_account)
       flash[:success] = t('.updated')
       redirect_to home_path
     else

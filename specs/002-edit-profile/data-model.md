@@ -14,7 +14,7 @@ indexes, normalization and the email and username rules are unchanged.
 | Change | Detail | Research |
 |---|---|---|
 | Password rules only when needed | Minimum 8 characters and Confirm Password presence apply to a new user, or when a password is set (`password_required?`) | R-001 |
-| `current_password` virtual attribute | On update, when the email changes: required ("can't be blank") and must match the saved password ("is incorrect") | R-002 |
+| `current_password` virtual attribute | On every Update Account save (`:update_account` context): required ("can't be blank") and must match the saved password ("is incorrect") | R-002 |
 | Session token | `generates_token_for :session`, based on the password salt; a new password makes existing tokens invalid | R-004 |
 
 ### Error messages

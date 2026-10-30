@@ -24,20 +24,23 @@ Decisions made while planning. Rails behavior was checked against the installed
 
 ## R-002: Current Password on Update Account (KI-017)
 
-- **Decision**: A `current_password` virtual attribute on `User`, checked on update when the
-  email changes: `validates :current_password, presence: true` and a `current_password_correct`
-  validation using `authenticate(current_password)`, both `on: :update, if:
-  :will_save_change_to_email?` (the correctness check also only when present). The message
-  `incorrect` is "is incorrect" and the attribute is named "Current Password" in
-  `config/locales/en.yml`.
-- **Rationale**: Keeps the rule in the model with the other `User` rules. Email normalization
-  runs on assignment, so ` Alice@Example.com ` for `alice@example.com` is not a change and
-  needs no current password (spec Edge Cases). The Update Account form never sets a password,
-  so `authenticate` checks against the saved digest.
-- **Alternatives considered**: `has_secure_password`'s built-in `password_challenge`. It adds
-  "is invalid" for any non-`nil` value that does not match, including a blank one, so a blank
-  field would need a second presence error and the two would show together ("can't be blank,
-  is invalid"); its name also does not match the field.
+- **Decision**: A `current_password` virtual attribute on `User`, required on every Update
+  Account save (spec Clarifications): `validates :current_password, presence: true` and a
+  `current_password_correct` validation using `authenticate(current_password)` (only when
+  present), both `on: :update_account`. `UsersController#update` saves with
+  `@user.save(context: :update_account)`. The message `incorrect` is "is incorrect" and the
+  attribute is named "Current Password" in `config/locales/en.yml`.
+- **Rationale**: Keeps the rule in the model with the other `User` rules. A named validation
+  context applies it only to the Update Account form, so other saves (such as `PasswordChange`
+  and password reset in feature 14) are not affected, and a request that leaves out the field
+  still fails. The Update Account form never sets a password, so `authenticate` checks against
+  the saved digest. Validations without `on:` (email, username, password rules) still run in a
+  named context.
+- **Alternatives considered**: `on: :update` (would also apply to `PasswordChange`'s
+  `user.update`, which has no current password); `has_secure_password`'s built-in
+  `password_challenge`, which adds "is invalid" for a blank value as well as any presence error,
+  and does not match the field name. An earlier version checked only when the email changed;
+  the owner changed this because the field was confusing when it was only sometimes needed.
 
 ## R-003: Change Password form (KI-016, KI-017)
 

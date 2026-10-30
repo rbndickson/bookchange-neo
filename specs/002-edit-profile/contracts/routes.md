@@ -41,7 +41,7 @@ Parameters: `user[email]`, `user[username]`, `user[current_password]`.
 - Valid: save, redirect to `/home`, flash `success` "Your profile was updated." (FR-006).
 - Invalid: status `422`, Update Account form with field errors, email and username as entered,
   Current Password empty; header shows the saved username (FR-007).
-- Current Password is checked only when the email changes (FR-005).
+- Current Password is needed for every save (FR-005).
 
 ### GET `/password/edit`
 

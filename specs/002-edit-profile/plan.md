@@ -10,7 +10,7 @@ Logged-in users change their email and username on an Update Account page, reach
 header's user menu, and their password on a separate Change Password page linked from it. The
 Update Account part mirrors the original: `UsersController#edit/update` at `/users/:id/edit`
 with `set_user`, `require_user` and `require_correct_user`. The approved fixes add a Current
-Password check when the email changes (a `User` virtual attribute), a `PasswordChange` form
+Password check on every Update Account save (a `User` virtual attribute), a `PasswordChange` form
 object and `PasswordsController` for the new page, rate limits on both forms, and logging out
 other sessions on a password change by storing a `generates_token_for` session token, based on
 the password salt, in place of the user id. `User`'s password rules are adjusted so a user can

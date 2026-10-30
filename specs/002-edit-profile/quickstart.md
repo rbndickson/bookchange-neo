@@ -38,9 +38,9 @@ and log in as alice.
 |---|---|---|
 | 1 | Open the user menu | "Update Account" above "Log Out" |
 | 2 | Click "Update Account" | Email and Username filled in, empty Current Password, "Update" button, "Change Password" link |
-| 3 | Change the username to `alice2`, click "Update" | Home page, "Your profile was updated.", header shows "alice2" |
-| 4 | Change the username to `Bob` | "Username has already been taken"; header still shows "alice2" |
-| 5 | Change the email to `alice2@example.com` with Current Password blank, then wrong | "Current Password can't be blank", then "Current Password is incorrect" |
+| 3 | Change the username to `alice2`, enter Current Password `password`, click "Update" | Home page, "Your profile was updated.", header shows "alice2" |
+| 4 | Change the username to `Bob`, with Current Password `password` | "Username has already been taken"; header still shows "alice2" |
+| 5 | Change the username or email with Current Password blank, then wrong | "Current Password can't be blank", then "Current Password is incorrect" |
 | 6 | Change the email to `alice2@example.com` with Current Password `password` | "Your profile was updated."; log out and log in with the new email |
 | 7 | Visit bob's `/users/<bob's id>/edit`, and `/users/999999/edit` | Home page, "You do not have access." |
 | 8 | Log out; visit `/users/<alice's id>/edit` and `/password/edit` | Log In page, "You must be logged in to do that." |
