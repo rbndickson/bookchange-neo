@@ -14,7 +14,9 @@ indexes, normalization and the email and username rules are unchanged.
 | Change | Detail | Research |
 |---|---|---|
 | Password rules only when needed | Minimum 8 characters and Confirm Password presence apply to a new user, or when a password is set (`password_required?`) | R-001 |
-| `current_password` virtual attribute | On every Update Account save (`:update_account` context): required ("can't be blank") and must match the saved password ("is incorrect") | R-002 |
+| `current_password` virtual attribute | On every Update Account save and password change (`:update_account` and `:change_password` contexts): required ("can't be blank") and must match the saved password ("is incorrect") | R-002 |
+| Change Password rules | In the `:change_password` context, `password` is required ("can't be blank") and the length and confirmation rules apply | R-003 |
+| Mismatch message | "The passwords do not match", shown without a field name (Sign Up and Change Password) | R-003 |
 | Session token | `generates_token_for :session`, based on the password salt; a new password makes existing tokens invalid | R-004 |
 
 ### Error messages
@@ -25,25 +27,6 @@ indexes, normalization and the email and username rules are unchanged.
 
 Field names and the "is incorrect" message are in `config/locales/en.yml`
 (`activerecord.attributes.user` and `activerecord.errors.models.user`).
-
-## PasswordChange (new form object)
-
-Not stored: an `ActiveModel::Model` used by the Change Password form, which saves the new
-password to its `user` (R-003).
-
-### Attributes
-
-| Attribute | Field name | Rules |
-|---|---|---|
-| `user` | | The logged-in user |
-| `current_password` | "Current Password" | Required; must match the user's saved password ("is incorrect") |
-| `new_password` | "New Password" | Required; at least 8 characters; no more than 72 bytes ("is too long (maximum is 72 characters)"); confirmed |
-| `new_password_confirmation` | "Confirm New Password" | Required; must match ("doesn't match New Password") |
-
-`save` returns `false` when invalid; otherwise it updates the user's password.
-
-Field names and messages are in `config/locales/en.yml` (`activemodel.attributes.
-password_change` and `activemodel.errors.models.password_change`).
 
 ## State changes
 

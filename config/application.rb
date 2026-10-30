@@ -41,5 +41,8 @@ module Bookchange
 
     # Leave invalid fields unwrapped; forms show Bootstrap error styles instead.
     config.action_view.field_error_proc = proc { |html_tag, _instance| html_tag }
+
+    # Lets a message leave out the field name, e.g. "The passwords do not match".
+    config.active_model.i18n_customize_full_message = true
   end
 end

@@ -31,38 +31,37 @@ Decisions made while planning. Rails behavior was checked against the installed
   `@user.save(context: :update_account)`. The message `incorrect` is "is incorrect" and the
   attribute is named "Current Password" in `config/locales/en.yml`.
 - **Rationale**: Keeps the rule in the model with the other `User` rules. A named validation
-  context applies it only to the Update Account form, so other saves (such as `PasswordChange`
-  and password reset in feature 14) are not affected, and a request that leaves out the field
+  context applies it only to the Update Account form, so other saves (such as password reset
+  in feature 14) are not affected, and a request that leaves out the field
   still fails. The Update Account form never sets a password, so `authenticate` checks against
   the saved digest. Validations without `on:` (email, username, password rules) still run in a
   named context.
-- **Alternatives considered**: `on: :update` (would also apply to `PasswordChange`'s
-  `user.update`, which has no current password); `has_secure_password`'s built-in
+- **Alternatives considered**: `on: :update` (would also apply to other updates that have no
+  current password); `has_secure_password`'s built-in
   `password_challenge`, which adds "is invalid" for a blank value as well as any presence error,
   and does not match the field name. An earlier version checked only when the email changed;
   the owner changed this because the field was confusing when it was only sometimes needed.
 
 ## R-003: Change Password form (KI-016, KI-017)
 
-- **Decision**: A `PasswordChange` form object (`ActiveModel::Model`) in `app/models` with
-  `user`, `current_password`, `new_password` and `new_password_confirmation`. It validates:
-  all three present; `current_password` correct (`user.authenticate`); `new_password` at least
-  8 characters and no more than 72 bytes (`password_too_long`, as in 001/R-008); and
-  `new_password` confirmation. `save` returns `false` if invalid, otherwise
-  `user.update(password: new_password, password_confirmation: new_password_confirmation)`.
-- **Rationale**: Error messages are built from attribute names, and the spec needs "New
-  Password" and "Confirm New Password" here while Sign Up keeps "Password" and "Confirm
-  Password". A separate model gives the form its own names (`activemodel.attributes.
-  password_change` in `config/locales/en.yml`), e.g. "Confirm New Password doesn't match New
-  Password". `User`'s own validations still run on save (R-001), so the stored password always
-  meets the rules.
-- **Note**: A blank New Password shows "can't be blank" and "is too short (minimum is 8
-  characters)", as Sign Up does for Password (001/R-008).
-- **Cost**: The three password rules (minimum 8, 72 bytes, confirmation) are written in both
-  `User` and `PasswordChange`.
-- **Alternatives considered**: Saving through `User` and renaming its errors (Rails' confirmation
-  message interpolates "Password", so messages would still read "doesn't match Password");
-  validation contexts on `User` (same naming problem).
+- **Decision**: Change the password through `User`, with a `:change_password` validation
+  context: `PasswordsController#update` assigns `current_password`, `password` and
+  `password_confirmation` to `current_user` and saves with `save(context: :change_password)`.
+  In that context `User` requires `current_password` and checks it (R-002), requires
+  `password` ("can't be blank"), and applies the length and confirmation rules
+  (`password_required?`). The current password is checked against `password_digest_was`, as
+  the new password is already assigned when validations run.
+- **Mismatch message**: "The passwords do not match", shown without a field name on Sign Up and
+  Change Password, using `config.active_model.i18n_customize_full_message` and a `format:
+  "%{message}"` for `password_confirmation` in `config/locales/en.yml`. That format applies to
+  every message on the attribute, so its blank message is written in full ("Confirm Password
+  can't be blank").
+- **Rationale**: The owner chose to keep Sign Up's field names on this page (spec
+  Clarifications), so one model and one set of rules serve both forms. A blank Password shows
+  "can't be blank" and "is too short (minimum is 8 characters)", as on Sign Up (001/R-008).
+- **Alternatives considered**: A `PasswordChange` form object with its own "New Password" and
+  "Confirm New Password" names. It was built first, but needed the password rules written
+  twice and a separate model; the owner found it overly complicated for the benefit.
 
 ## R-004: Logging out other sessions on password change (KI-018)
 

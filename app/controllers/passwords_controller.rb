@@ -4,15 +4,16 @@ class PasswordsController < ApplicationController
              with: -> { redirect_to edit_password_path, flash: { danger: t('passwords.update.rate_limited') } }
 
   def edit
-    @password_change = PasswordChange.new
+    @user = current_user
   end
 
   def update
-    @password_change = PasswordChange.new(password_change_params.merge(user: current_user))
+    @user = current_user
+    @user.assign_attributes(password_params)
 
-    if @password_change.save
+    if @user.save(context: :change_password)
       reset_session
-      session[:user_token] = @password_change.user.generate_token_for(:session)
+      session[:user_token] = @user.generate_token_for(:session)
       flash[:success] = t('.changed')
       redirect_to home_path
     else
@@ -22,7 +23,7 @@ class PasswordsController < ApplicationController
 
   private
 
-  def password_change_params
-    params.expect(password_change: [:current_password, :new_password, :new_password_confirmation])
+  def password_params
+    params.expect(user: [:current_password, :password, :password_confirmation])
   end
 end

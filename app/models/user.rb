@@ -16,19 +16,23 @@ class User < ApplicationRecord
   validates :username, presence: true,
                        length: { in: 2..20, allow_blank: true },
                        uniqueness: { case_sensitive: false }
+  validates :password, presence: true, on: :change_password
   validates :password, length: { minimum: 8 }, if: :password_required?
   validates :password_confirmation, presence: true, if: :password_required?
 
   attr_accessor :current_password
 
-  validates :current_password, presence: true, on: :update_account
-  validate :current_password_correct, on: :update_account, if: -> { current_password.present? }
+  validates :current_password, presence: true, on: [:update_account, :change_password]
+  validate :current_password_correct, on: [:update_account, :change_password], if: -> { current_password.present? }
 
   private
 
-  def password_required? = new_record? || !password.nil?
+  def password_required? = new_record? || !password.nil? || validation_context == :change_password
 
   def current_password_correct
-    errors.add(:current_password, :incorrect) unless authenticate(current_password)
+    # Checked against the saved password, as a new one may already be set on this record.
+    return if BCrypt::Password.new(password_digest_was).is_password?(current_password)
+
+    errors.add(:current_password, :incorrect)
   end
 end

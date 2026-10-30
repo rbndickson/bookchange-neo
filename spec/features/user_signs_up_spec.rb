@@ -47,7 +47,7 @@ feature 'user signs up' do
     visit signup_path
     fill_in_sign_up_form(confirmation: 'something else')
     click_button 'Sign Up'
-    expect_field_error('Confirm Password', "Confirm Password doesn't match Password")
+    expect_field_error('Confirm Password', 'The passwords do not match')
     expect(User.count).to eq(0)
   end
 

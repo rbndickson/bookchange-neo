@@ -48,7 +48,7 @@ and log in as alice.
 | 10 | In one, Update Account → "Change Password"; enter `password`, `newpassword` twice | Home page, "Your password was changed.", still logged in |
 | 11 | In the other browser, reload | Logged out: next page needing log in shows "You must be logged in to do that." |
 | 12 | Log out; log in with `password`, then `newpassword` | First fails, second works |
-| 13 | On Change Password, submit mismatched or short new passwords, or a wrong current password | "Confirm New Password doesn't match New Password", "New Password is too short (minimum is 8 characters)", "Current Password is incorrect" |
+| 13 | On Change Password, submit mismatched or short new passwords, or a wrong current password | "The passwords do not match", "Password is too short (minimum is 8 characters)", "Current Password is incorrect" |
 | 14 | Submit the Update Account form 11 times within 3 minutes | 11th: "Try again later." |
 | 15 | Repeat 2 and 10 at 375 px wide (browser dev tools) | No horizontal scrolling (SC-006) |
 

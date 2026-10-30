@@ -36,6 +36,11 @@ KI-019).
 - Q: Should changing only the username also need the Current Password? → A: Yes. A Current
   Password field that is only sometimes needed was confusing, so every Update Account save needs
   it (changes the KI-017 decision).
+- Q: Should the Change Password page keep its own field names ("New Password", "Confirm New
+  Password")? → A: No. They needed a separate form model only to name the fields in messages.
+  The page uses "Password" and "Confirm Password", as Sign Up does, and a password mismatch
+  shows "The passwords do not match" on both pages (replaces the field names in the first
+  answer above; changes feature 1's mismatch message, KI-014).
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -109,10 +114,10 @@ with the new password and not the old one.
 **Acceptance Scenarios**:
 
 1. **Given** a logged-in user on the Update Account page, **When** they click "Change Password",
-   **Then** they see the "Change Password" page with empty Current Password, New Password and
-   Confirm New Password fields and a "Change Password" button.
+   **Then** they see the "Change Password" page with empty Current Password, Password and
+   Confirm Password fields and a "Change Password" button.
 2. **Given** a logged-in user on the Change Password page, **When** they enter their current
-   password, a new password of 8–72 characters and the same in Confirm New Password, and click
+   password, a new password of 8–72 characters and the same in Confirm Password, and click
    "Change Password", **Then** the password is changed, they stay logged in, are taken to the
    home page and see "Your password was changed." (KI-016).
 3. **Given** a user who has changed their password, **When** they log in, **Then** the new
@@ -126,13 +131,13 @@ with the new password and not the old one.
 6. **Given** a logged-in user on the Change Password page, **When** they enter a wrong Current
    Password, **Then** the password is not changed and they see "Current Password is incorrect"
    (KI-017).
-7. **Given** a logged-in user on the Change Password page, **When** New Password and Confirm New
-   Password do not match, **Then** the password is not changed and they see "Confirm New
-   Password doesn't match New Password".
+7. **Given** a logged-in user on the Change Password page, **When** Password and Confirm
+   Password do not match, **Then** the password is not changed and they see "The passwords do
+   not match".
 8. **Given** a logged-in user on the Change Password page, **When** the new password is shorter
    than 8 characters, or longer than 72 characters or 72 bytes, **Then** the password is not
-   changed and they see "New Password is too short (minimum is 8 characters)" or "New Password
-   is too long (maximum is 72 characters)" (KI-004).
+   changed and they see "Password is too short (minimum is 8 characters)" or "Password is too
+   long (maximum is 72 characters)" (KI-004).
 9. **Given** 10 submissions of the Change Password form from the same connection in the last 3
    minutes, **When** it is submitted again, even with correct details, **Then** the password is
    not changed, they are returned to the Change Password page and see "Try again later."
@@ -244,12 +249,10 @@ feature 1 and are referred to by the requirements below.
 **Change Password**
 
 - **FR-008**: The Change Password page MUST have the heading "Change Password" and a form with
-  empty Current Password, New Password and Confirm New Password fields and a "Change Password"
-  button.
+  empty Current Password, Password and Confirm Password fields and a "Change Password" button.
 - **FR-009**: Users MUST be able to change their password; all three fields MUST be required,
-  the new password MUST follow the Sign Up password rules (feature 1: FR-003) and match Confirm
-  New Password, with messages naming the fields as labelled (e.g. "Confirm New Password doesn't
-  match New Password") (KI-014, KI-016).
+  the new password MUST follow the Sign Up password rules and messages (feature 1: FR-003,
+  FR-007), and a mismatch MUST show "The passwords do not match" (KI-014, KI-016).
 - **FR-010**: A wrong Current Password MUST show "Current Password is incorrect" and leave the
   password unchanged (KI-017).
 - **FR-011**: On a successful change the user MUST stay logged in and be taken to the home page
@@ -299,8 +302,9 @@ feature 1 and are referred to by the requirements below.
 - **Labels and wording** follow the original for Update Account: the menu item and heading
   "Update Account", fields "Email" and "Username", button "Update" and the message "Your profile
   was updated." The Current Password field, the Change Password page and link, its labels
-  ("Current Password", "New Password", "Confirm New Password"), its button and the message "Your
-  password was changed." are new with KI-016 and KI-017, and approved by the project owner.
+  ("Current Password", then "Password" and "Confirm Password" as on Sign Up), its button and the
+  message "Your password was changed." are new with KI-016 and KI-017, and approved by the
+  project owner.
 - **Current Password messages** use the standard wording for a blank field ("can't be blank")
   and "is incorrect" for a wrong password, after the field's name (KI-014).
 - **Account address**: the Update Account page is reached at an address naming the account, as

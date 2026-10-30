@@ -3,35 +3,31 @@
     <h3>Change Password</h3>
     <hr>
 
-    <%= form_with model: @password_change, url: password_path, method: :patch do |form| %>
+    <%= form_with model: @user, url: password_path, method: :patch do |form| %>
       <div class="row mb-3">
         <%= form.label :current_password, "Current Password", class: "col-sm-5 col-form-label" %>
 
         <div class="col-sm-7">
-          <%= form.password_field :current_password,
-                class: form_control_class(@password_change, :current_password) %>
-
-          <%= render "shared/field_errors", record: @password_change, attribute: :current_password %>
+          <%= form.password_field :current_password, class: form_control_class(@user, :current_password) %>
+          <%= render "shared/field_errors", record: @user, attribute: :current_password %>
         </div>
       </div>
 
       <div class="row mb-3">
-        <%= form.label :new_password, "New Password", class: "col-sm-5 col-form-label" %>
+        <%= form.label :password, "Password", class: "col-sm-5 col-form-label" %>
 
         <div class="col-sm-7">
-          <%= form.password_field :new_password, class: form_control_class(@password_change, :new_password) %>
-          <%= render "shared/field_errors", record: @password_change, attribute: :new_password %>
+          <%= form.password_field :password, class: form_control_class(@user, :password) %>
+          <%= render "shared/field_errors", record: @user, attribute: :password %>
         </div>
       </div>
 
       <div class="row mb-3">
-        <%= form.label :new_password_confirmation, "Confirm New Password", class: "col-sm-5 col-form-label" %>
+        <%= form.label :password_confirmation, "Confirm Password", class: "col-sm-5 col-form-label" %>
 
         <div class="col-sm-7">
-          <%= form.password_field :new_password_confirmation,
-                class: form_control_class(@password_change, :new_password_confirmation) %>
-
-          <%= render "shared/field_errors", record: @password_change, attribute: :new_password_confirmation %>
+          <%= form.password_field :password_confirmation, class: form_control_class(@user, :password_confirmation) %>
+          <%= render "shared/field_errors", record: @user, attribute: :password_confirmation %>
         </div>
       </div>
 

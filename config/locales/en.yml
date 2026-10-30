@@ -42,22 +42,12 @@ en:
               taken: "cannot be used"
             password:
               password_too_long: "is too long (maximum is 72 characters)"
+            password_confirmation:
+              format: "%{message}"
+              blank: "Confirm Password can't be blank"
+              confirmation: "The passwords do not match"
             current_password:
               incorrect: "is incorrect"
-  activemodel:
-    attributes:
-      password_change:
-        current_password: "Current Password"
-        new_password: "New Password"
-        new_password_confirmation: "Confirm New Password"
-    errors:
-      models:
-        password_change:
-          attributes:
-            current_password:
-              incorrect: "is incorrect"
-            new_password:
-              password_too_long: "is too long (maximum is 72 characters)"
   access_denied:
     logged_in: "You do not have access."
     not_logged_in: "You must be logged in to do that."

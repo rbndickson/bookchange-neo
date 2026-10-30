@@ -156,6 +156,17 @@ Story 3)
 
 ---
 
+## Phase 6: Changes After Review
+
+**Purpose**: Changes the project owner asked for after implementation (spec Clarifications).
+They supersede the parts of T008, T010, T011 and T015–T019 they change.
+
+- [X] T031 Require Current Password on every Update Account save: `current_password` validations `on: :update_account`, saved with `@user.save(context: :update_account)` in `app/controllers/users_controller.rb`; update `spec/models/user_spec.rb` and `spec/features/user_updates_account_spec.rb` (KI-017, FR-005, R-002)
+- [X] T032 Remove the `PasswordChange` form object (`app/models/password_change.rb`, `spec/models/password_change_spec.rb`): `app/controllers/passwords_controller.rb` saves `current_user` with `save(context: :change_password)`; `app/models/user.rb` requires `password` and checks `current_password` against `password_digest_was` in that context; `app/views/passwords/edit.html.erb` uses "Password" and "Confirm Password"; tests in `spec/models/user_spec.rb` and `spec/features/user_changes_password_spec.rb` (FR-008, FR-009, R-003)
+- [X] T033 Show "The passwords do not match" without a field name on Sign Up and Change Password: `config.active_model.i18n_customize_full_message = true` in `config/application.rb`; `format: "%{message}"`, `blank` and `confirmation` messages for `password_confirmation` in `config/locales/en.yml`; update `spec/features/user_signs_up_spec.rb` and feature 1's spec (KI-014, R-003)
+
+---
+
 ## Dependencies & Execution Order
 
 ### Phase Dependencies

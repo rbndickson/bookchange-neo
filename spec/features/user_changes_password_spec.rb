@@ -9,7 +9,7 @@ feature 'user changes password' do
     visit edit_user_path(alice)
     click_link 'Change Password'
     expect(page).to have_css('h3', text: 'Change Password')
-    ['Current Password', 'New Password', 'Confirm New Password'].each do |label|
+    ['Current Password', 'Password', 'Confirm Password'].each do |label|
       expect(find_field(label).value).to be_blank
     end
     expect(page).to have_button('Change Password')
@@ -51,8 +51,8 @@ feature 'user changes password' do
   scenario 'with blank fields' do
     change_password(current_password: '', new_password: '', confirmation: '')
     expect_field_error('Current Password', "Current Password can't be blank")
-    expect_field_error('New Password', "New Password can't be blank")
-    expect_field_error('Confirm New Password', "Confirm New Password can't be blank")
+    expect_field_error('Password', "Password can't be blank")
+    expect_field_error('Confirm Password', "Confirm Password can't be blank")
   end
 
   scenario 'with a wrong current password' do
@@ -63,23 +63,23 @@ feature 'user changes password' do
 
   scenario 'with new passwords that do not match' do
     change_password(confirmation: 'something else')
-    expect_field_error('Confirm New Password', "Confirm New Password doesn't match New Password")
+    expect_field_error('Confirm Password', 'The passwords do not match')
     expect_password_unchanged
   end
 
   scenario 'with a new password that is too short' do
     change_password(new_password: 'short')
-    expect_field_error('New Password', 'New Password is too short (minimum is 8 characters)')
+    expect_field_error('Password', 'Password is too short (minimum is 8 characters)')
   end
 
   scenario 'with a new password that is too long' do
     change_password(new_password: 'a' * 73)
-    expect_field_error('New Password', 'New Password is too long (maximum is 72 characters)')
+    expect_field_error('Password', 'Password is too long (maximum is 72 characters)')
   end
 
   scenario 'sees all fields empty after a failed save' do
     change_password(confirmation: 'something else')
-    ['Current Password', 'New Password', 'Confirm New Password'].each do |label|
+    ['Current Password', 'Password', 'Confirm Password'].each do |label|
       expect(find_field(label).value).to be_blank
     end
   end
@@ -102,8 +102,8 @@ feature 'user changes password' do
   def change_password(current_password: 'password', new_password: 'newpassword', confirmation: new_password)
     visit edit_password_path
     fill_in 'Current Password', with: current_password
-    fill_in 'New Password', with: new_password
-    fill_in 'Confirm New Password', with: confirmation
+    fill_in 'Password', with: new_password
+    fill_in 'Confirm Password', with: confirmation
     click_button 'Change Password'
   end
 

@@ -45,13 +45,12 @@ Parameters: `user[email]`, `user[username]`, `user[current_password]`.
 
 ### GET `/password/edit`
 
-- Change Password form (FR-008): heading "Change Password"; empty Current Password, New Password
-  and Confirm New Password; "Change Password" button.
+- Change Password form (FR-008): heading "Change Password"; empty Current Password, Password and
+  Confirm Password; "Change Password" button.
 
 ### PATCH `/password`
 
-Parameters: `password_change[current_password]`, `password_change[new_password]`,
-`password_change[new_password_confirmation]`.
+Parameters: `user[current_password]`, `user[password]`, `user[password_confirmation]`.
 
 - Rate limited: more than 10 requests from one IP within 3 minutes → redirect to
   `/password/edit`, flash `danger` "Try again later." Nothing is saved (FR-013).
