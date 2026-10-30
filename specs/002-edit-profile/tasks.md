@@ -132,11 +132,11 @@ Story 3)
 
 ### Tests for User Story 3
 
-- [ ] T021 [US3] Write `spec/features/user_cannot_change_another_account_spec.rb` (`type: :feature`) covering User Story 3 scenarios 1–3. Users routes: a visitor visiting `edit_user_path(alice)` sees the Log In page and "You must be logged in to do that."; `bob` visiting `edit_user_path(alice)` sees the home page and "You do not have access."; `bob` visiting `edit_user_path(id: 0)` (no such account) sees the same. For submitting to another account (scenario 2), use `page.driver.submit :patch, user_path(alice), user: { username: 'taken' }` (Rack::Test) while logged in as `bob`, then check "You do not have access." and that `alice.reload.username` is unchanged; as a visitor, the same request shows "You must be logged in to do that." Password routes: a visitor visiting `edit_password_path`, or submitting `page.driver.submit :patch, password_path, {}`, sees the Log In page and "You must be logged in to do that." Confirm the tests fail only where a guard is missing (the guards are built in T011 and T018).
+- [X] T021 [US3] Write `spec/features/user_cannot_change_another_account_spec.rb` (`type: :feature`) covering User Story 3 scenarios 1–3. Users routes: a visitor visiting `edit_user_path(alice)` sees the Log In page and "You must be logged in to do that."; `bob` visiting `edit_user_path(alice)` sees the home page and "You do not have access."; `bob` visiting `edit_user_path(id: 0)` (no such account) sees the same. For submitting to another account (scenario 2), use `page.driver.submit :patch, user_path(alice), user: { username: 'taken' }` (Rack::Test) while logged in as `bob`, then check "You do not have access." and that `alice.reload.username` is unchanged; as a visitor, the same request shows "You must be logged in to do that." Password routes: a visitor visiting `edit_password_path`, or submitting `page.driver.submit :patch, password_path, {}`, sees the Log In page and "You must be logged in to do that." Confirm the tests fail only where a guard is missing (the guards are built in T011 and T018).
 
 ### Implementation for User Story 3
 
-- [ ] T022 [US3] Run `bundle exec rspec spec/features/user_cannot_change_another_account_spec.rb` and fix the guards in `app/controllers/users_controller.rb` and `app/controllers/passwords_controller.rb` until all pass (FR-015, FR-016)
+- [X] T022 [US3] Run `bundle exec rspec spec/features/user_cannot_change_another_account_spec.rb` and fix the guards in `app/controllers/users_controller.rb` and `app/controllers/passwords_controller.rb` until all pass (FR-015, FR-016)
 
 **Checkpoint**: All user stories work independently
 
