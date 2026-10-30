@@ -10,6 +10,7 @@ describe User, type: :model do
   it { is_expected.to validate_presence_of(:email) }
   it { is_expected.to validate_length_of(:email).is_at_most(254) }
   it { is_expected.to allow_value('alice@example.com').for(:email) }
+  it { is_expected.to allow_value("#{"a" * 242}@example.com").for(:email) }
   it { is_expected.not_to allow_value('alice').for(:email).with_message('is invalid') }
   it { is_expected.to validate_uniqueness_of(:email).ignoring_case_sensitivity.with_message('cannot be used') }
   it { is_expected.to normalize(:email).from(' Alice@Example.com ').to('alice@example.com') }
@@ -19,7 +20,9 @@ describe User, type: :model do
   it { is_expected.to validate_uniqueness_of(:username).case_insensitive }
   it { is_expected.to normalize(:username).from(' Alice ').to('Alice') }
 
+  it { is_expected.to validate_presence_of(:password) }
   it { is_expected.to validate_length_of(:password).is_at_least(8) }
+  it { is_expected.to validate_confirmation_of(:password) }
   it { is_expected.to validate_presence_of(:password_confirmation) }
 
   def errors_on(attribute, **attributes)
@@ -29,6 +32,10 @@ describe User, type: :model do
   end
 
   describe 'email' do
+    it 'shows only the blank error when blank' do
+      expect(errors_on(:email, email: '')).to eq(["can't be blank"])
+    end
+
     it 'is unique ignoring letter case and surrounding spaces' do
       alice
       expect(errors_on(:email, email: ' Alice@Example.com ')).to eq(['cannot be used'])
@@ -36,6 +43,14 @@ describe User, type: :model do
   end
 
   describe 'username' do
+    it 'shows only the blank error when blank' do
+      expect(errors_on(:username, username: '')).to eq(["can't be blank"])
+    end
+
+    it 'shows only the blank error when only spaces' do
+      expect(errors_on(:username, username: '   ')).to eq(["can't be blank"])
+    end
+
     it 'is unique ignoring surrounding spaces' do
       alice
       expect(errors_on(:username, username: ' alice ')).to eq(['has already been taken'])
