@@ -1,6 +1,11 @@
 class User < ApplicationRecord
   has_secure_password
 
+  # Based on the password, so changing it logs out other sessions (KI-018).
+  generates_token_for :session do
+    password_salt.last(10)
+  end
+
   normalizes :email, with: ->(email) { email.strip.downcase }
   normalizes :username, with: ->(username) { username.strip }
 
@@ -11,6 +16,10 @@ class User < ApplicationRecord
   validates :username, presence: true,
                        length: { in: 2..20, allow_blank: true },
                        uniqueness: { case_sensitive: false }
-  validates :password, length: { minimum: 8 }
-  validates :password_confirmation, presence: true
+  validates :password, length: { minimum: 8 }, if: :password_required?
+  validates :password_confirmation, presence: true, if: :password_required?
+
+  private
+
+  def password_required? = new_record? || !password.nil?
 end

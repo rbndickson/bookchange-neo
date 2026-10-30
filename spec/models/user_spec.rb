@@ -76,6 +76,24 @@ describe User, type: :model do
       expect(errors_on(:password, password: password, password_confirmation: password))
         .to eq(['is too long (maximum is 72 characters)'])
     end
+
+    context 'when the user is saved' do
+      let(:saved_alice) { described_class.find(alice.id) }
+
+      it 'is not needed to update other fields' do
+        expect(saved_alice.update(username: 'alice2')).to be(true)
+      end
+
+      it 'is at least 8 characters when a new one is set' do
+        saved_alice.update(password: 'short', password_confirmation: 'short')
+        expect(saved_alice.errors[:password]).to eq(['is too short (minimum is 8 characters)'])
+      end
+
+      it 'needs a confirmation when a new one is set' do
+        saved_alice.update(password: 'newpassword')
+        expect(saved_alice.errors[:password_confirmation]).to eq(["can't be blank"])
+      end
+    end
   end
 
   describe 'full error messages' do
@@ -100,6 +118,29 @@ describe User, type: :model do
 
     it 'returns nil for an unknown email' do
       expect(described_class.authenticate_by(email: 'bob@example.com', password: 'password')).to be_nil
+    end
+  end
+
+  describe 'session token' do
+    let(:alices_token) { alice.generate_token_for(:session) }
+
+    it 'finds the user' do
+      expect(described_class.find_by_token_for(:session, alices_token)).to eq(alice)
+    end
+
+    context 'when the password has changed' do
+      before do
+        alices_token
+        alice.update(password: 'newpassword', password_confirmation: 'newpassword')
+      end
+
+      it 'does not find the user with a token made before' do
+        expect(described_class.find_by_token_for(:session, alices_token)).to be_nil
+      end
+
+      it 'finds the user with a new token' do
+        expect(described_class.find_by_token_for(:session, alice.generate_token_for(:session))).to eq(alice)
+      end
     end
   end
 end

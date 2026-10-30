@@ -10,7 +10,7 @@ class SessionsController < ApplicationController
 
     if user
       reset_session
-      session[:user_id] = user.id
+      session[:user_token] = user.generate_token_for(:session)
       redirect_to home_path
     else
       flash[:danger] = t('.failed')
