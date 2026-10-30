@@ -126,12 +126,6 @@ feature 'user signs up' do
     end
   end
 
-  def expect_field_error(label, message)
-    field = find_field(label)
-    expect(field[:class]).to include('is-invalid')
-    expect(page).to have_css("##{field[:id]} ~ .invalid-feedback", text: message)
-  end
-
   def expect_to_be_logged_out
     within('nav') { expect(page).to have_link('Log In') }
   end

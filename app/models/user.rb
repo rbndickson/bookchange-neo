@@ -19,7 +19,17 @@ class User < ApplicationRecord
   validates :password, length: { minimum: 8 }, if: :password_required?
   validates :password_confirmation, presence: true, if: :password_required?
 
+  attr_accessor :current_password
+
+  validates :current_password, presence: true, on: :update, if: :will_save_change_to_email?
+  validate :current_password_correct, on: :update,
+                                      if: -> { will_save_change_to_email? && current_password.present? }
+
   private
 
   def password_required? = new_record? || !password.nil?
+
+  def current_password_correct
+    errors.add(:current_password, :incorrect) unless authenticate(current_password)
+  end
 end

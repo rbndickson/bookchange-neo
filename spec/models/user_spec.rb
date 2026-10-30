@@ -96,6 +96,42 @@ describe User, type: :model do
     end
   end
 
+  describe 'current password' do
+    let(:saved_alice) { described_class.find(alice.id) }
+
+    def update_email(current_password)
+      saved_alice.update(email: 'alice2@example.com', current_password: current_password)
+    end
+
+    it 'is needed to change the email' do
+      update_email(nil)
+      expect(saved_alice.errors[:current_password]).to eq(["can't be blank"])
+    end
+
+    it 'shows only the blank error when blank' do
+      update_email('')
+      expect(saved_alice.errors[:current_password]).to eq(["can't be blank"])
+    end
+
+    it 'must be correct to change the email' do
+      update_email('wrong password')
+      expect(saved_alice.errors[:current_password]).to eq(['is incorrect'])
+    end
+
+    it 'changes the email when correct' do
+      expect(update_email('password')).to be(true)
+      expect(saved_alice.reload.email).to eq('alice2@example.com')
+    end
+
+    it 'is not needed to change the username, and is ignored if wrong' do
+      expect(saved_alice.update(username: 'alice2', current_password: 'wrong password')).to be(true)
+    end
+
+    it 'is not needed when the email only differs in letter case and spaces' do
+      expect(saved_alice.update(email: ' Alice@Example.com ')).to be(true)
+    end
+  end
+
   describe 'full error messages' do
     it 'names the field before each message' do
       alice

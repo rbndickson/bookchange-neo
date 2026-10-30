@@ -19,6 +19,10 @@
 
         <ul class="dropdown-menu dropdown-menu-end">
           <li>
+            <%= link_to "Update Account", edit_user_path(current_user), class: "dropdown-item" %>
+          </li>
+
+          <li>
             <%= button_to "Log Out", logout_path, method: :delete, class: "dropdown-item" %>
           </li>
         </ul>
