@@ -6,7 +6,7 @@ class SessionsController < ApplicationController
   def new; end
 
   def create
-    user = User.authenticate_by(email: params[:email], password: params[:password])
+    user = User.authenticate_by(email: log_in_params[:email], password: log_in_params[:password])
 
     if user
       reset_session
@@ -22,5 +22,11 @@ class SessionsController < ApplicationController
     reset_session
     flash[:info] = t('.logged_out')
     redirect_to root_path
+  end
+
+  private
+
+  def log_in_params
+    params.permit(:email, :password)
   end
 end
