@@ -17,4 +17,10 @@ class SessionsController < ApplicationController
       redirect_to login_path
     end
   end
+
+  def destroy
+    reset_session
+    flash[:info] = t('.logged_out')
+    redirect_to root_path
+  end
 end
