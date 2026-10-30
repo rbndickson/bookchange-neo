@@ -20,6 +20,13 @@ column (password reset, roadmap feature 14).
 
 Virtual attributes from `has_secure_password`: `password`, `password_confirmation`.
 
+### Error messages
+
+Each message is shown next to its field as a full message starting with the field's name
+(KI-014), e.g. "Email can't be blank". Field names come from the attribute names, except
+`password_confirmation`, which is named "Confirm Password" in `config/locales/en.yml` to match
+its label.
+
 ### Indexes
 
 | Index | Unique | Purpose |
@@ -34,19 +41,19 @@ Virtual attributes from `has_secure_password`: `password`, `password_confirmatio
 
 ### Validations
 
-| Attribute | Rule | Error message (shown next to the field) | Spec |
+| Attribute | Rule | Error message (shown next to the field after its name, KI-014) | Spec |
 |---|---|---|---|
 | `email` | present | can't be blank | FR-002 |
 | `email` | valid format (`URI::MailTo::EMAIL_REGEXP`), unless blank | is invalid | FR-002a, KI-005 |
 | `email` | at most 254 characters, unless blank | is too long (maximum is 254 characters) | FR-002b, KI-010 |
-| `email` | unique | This email cannot be used | FR-004a, KI-011 |
+| `email` | unique | cannot be used | FR-004a, KI-011 |
 | `username` | present | can't be blank | FR-002 |
 | `username` | 2–20 characters, unless blank | is too short (minimum is 2 characters) / is too long (maximum is 20 characters) | FR-002b, KI-010 |
 | `username` | unique, ignoring letter case | has already been taken | FR-004, KI-009 |
 | `password` | present on create (`has_secure_password`) | can't be blank | FR-002 |
 | `password` | at least 8 characters | is too short (minimum is 8 characters) | FR-003 |
 | `password` | at most 72 bytes (`has_secure_password`) | is too long (maximum is 72 characters) | FR-003, KI-004, R-008 |
-| `password` | matches confirmation (`has_secure_password`) | doesn't match Password (on Confirm Password) | FR-003 |
+| `password` | matches confirmation (`has_secure_password`) | doesn't match Password (on `password_confirmation`) | FR-003 |
 | `password_confirmation` | present | can't be blank | FR-002 |
 
 ### Relationships

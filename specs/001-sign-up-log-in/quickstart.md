@@ -39,8 +39,8 @@ interfaces (`bin/dev` with `BINDING=0.0.0.0` or `bin/rails server -b 0.0.0.0`).
 |---|---|---|
 | 1 | Visit `/` logged out | Front page heading, lead text, "Sign Up" button; header shows "Sign Up" and "Log In" |
 | 2 | Sign up with `alice@example.com`, `alice`, `password` twice | Log In page, "You have joined Bookchange, you can now log in." |
-| 3 | Sign up again with ` Alice@Example.com `, `Alice` | "This email cannot be used" on Email, "has already been taken" on Username |
-| 4 | Sign up with `bob@example.com`, username `b`, password `short` twice | "is too short (minimum is 2 characters)" on Username, "is too short (minimum is 8 characters)" on Password |
+| 3 | Sign up again with ` Alice@Example.com `, `Alice` | "Email cannot be used", "Username has already been taken" |
+| 4 | Sign up with `bob@example.com`, username `b`, password `short` twice | "Username is too short (minimum is 2 characters)", "Password is too short (minimum is 8 characters)" |
 | 5 | Log in with ` ALICE@example.com ` and `password` | Home page with the username; header shows the user menu "alice" |
 | 6 | Visit `/login` and `/signup` while logged in | Redirected to the home page |
 | 7 | Open the user menu, click "Log Out" | Front page, "You have logged out.", logged-out header |

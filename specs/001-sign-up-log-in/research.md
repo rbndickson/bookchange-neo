@@ -82,7 +82,7 @@ Decisions made while planning. R-001 to R-003 were confirmed by the project owne
   - `normalizes :email, with: ->(email) { email.strip.downcase }`. Rails also applies it to
     finder values, so `authenticate_by(email: ' Alice@Example.com ')` finds `alice@example.com`.
   - Email: presence; length maximum 254; format `URI::MailTo::EMAIL_REGEXP`; uniqueness with
-    the message "This email cannot be used". Length and format use `allow_blank: true`, so a
+    the message "cannot be used" (shown as "Email cannot be used", KI-014). Length and format use `allow_blank: true`, so a
     blank email only shows "can't be blank".
   - Username: presence; length 2–20; uniqueness with `case_sensitive: false`. Stored and shown
     as typed.
@@ -118,8 +118,9 @@ Decisions made while planning. R-001 to R-003 were confirmed by the project owne
 ## R-009: Forms and error display
 
 - **Decision**: ERB forms with `form_with` and Bootstrap 5 form classes. Each invalid field
-  gets `is-invalid` and its messages in an `invalid-feedback` element, joined with ", " (as
-  bootstrap_form did in the original), shown through a shared partial. Set
+  gets `is-invalid` and its full messages (`errors.full_messages_for`, e.g. "Email can't be
+  blank"; KI-014) in an `invalid-feedback` element, joined with ", ", shown through a shared
+  partial. The original's bootstrap_form showed messages without the field name. Set
   `config.action_view.field_error_proc` to return the field unchanged, so Rails' default
   `field_with_errors` wrapper does not break Bootstrap's layout.
 - **Rationale**: The original used the `bootstrap_form` gem; the new stack has no form gem, and

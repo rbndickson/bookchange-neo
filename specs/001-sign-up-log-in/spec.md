@@ -21,7 +21,7 @@ feature was first added, the final version of that behavior is the reference (e.
 
 Parts of the original's pages that belong to later roadmap features are left out until those
 features are built (see Assumptions). Approved fixes and accepted behavior are listed under
-Differences from the Original (KI-001 to KI-013).
+Differences from the Original (KI-001 to KI-014).
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -49,37 +49,39 @@ the log in page.
    created, they are taken to the Log In page and see "You have joined Bookchange, you can now
    log in."
 4. **Given** a visitor on the Sign Up form, **When** they leave any field blank and click
-   "Sign Up", **Then** no account is created and they see the form again with a "can't be blank"
-   error next to each blank field, with the other values they entered kept (except passwords).
+   "Sign Up", **Then** no account is created and they see the form again with an error naming
+   each blank field next to it (e.g. "Email can't be blank"), with the other values they entered kept (except passwords).
 5. **Given** a visitor on the Sign Up form, **When** the password and Confirm Password do not
-   match, **Then** no account is created and they see a "doesn't match" error.
+   match, **Then** no account is created and they see "Confirm Password doesn't match
+   Password".
 6. **Given** a visitor on the Sign Up form, **When** the password is shorter than 8 characters,
-   **Then** no account is created and they see an error that it is too short (minimum 8
-   characters).
+   **Then** no account is created and they see "Password is too short (minimum is 8
+   characters)".
 7. **Given** an existing account, **When** a visitor signs up with the same email, **Then** no
-   account is created and they see "This email cannot be used" on Email (KI-011); **When** they
-   sign up with the same username, **Then** no account is created and they see a "has already
-   been taken" error on Username.
+   account is created and they see "Email cannot be used" (KI-011); **When** they sign up with
+   the same username, **Then** no account is created and they see "Username has already been
+   taken".
 8. **Given** an account with the email `alice@example.com`, **When** a visitor signs up with
-   ` Alice@Example.com `, **Then** no account is created and they see "This email cannot be
-   used" on Email (KI-001, KI-011).
+   ` Alice@Example.com `, **Then** no account is created and they see "Email cannot be used"
+   (KI-001, KI-011).
 9. **Given** a visitor on the Sign Up form, **When** they enter an email in an invalid format
-   (e.g. `alice`), **Then** no account is created and they see an "is invalid" error on Email
-   (KI-005).
+   (e.g. `alice`), **Then** no account is created and they see "Email is invalid" (KI-005).
 10. **Given** a visitor on the Sign Up form, **When** the password is longer than 72
     characters, or longer than 72 bytes (e.g. many accented letters or emoji), **Then** no
-    account is created and they see an error that it is too long (KI-004).
+    account is created and they see "Password is too long (maximum is 72 characters)"
+    (KI-004).
 11. **Given** a logged-in user, **When** they visit the Sign Up page, **Then** they are taken to
     the home page instead (KI-003).
 12. **Given** an account with the username `alice`, **When** a visitor signs up with the
-    username `Alice`, **Then** no account is created and they see "has already been taken" on
-    Username (KI-009).
+    username `Alice`, **Then** no account is created and they see "Username has already been
+    taken" (KI-009).
 13. **Given** a visitor on the Sign Up form, **When** they enter an email longer than 254
     characters or a username longer than 20 characters, **Then** no account is created and they
-    see an error that it is too long (KI-010).
+    see "Email is too long (maximum is 254 characters)" or "Username is too long (maximum
+    is 20 characters)" (KI-010).
 14. **Given** a visitor on the Sign Up form, **When** they enter a one-character username,
-    **Then** no account is created and they see an error that it is too short (minimum 2
-    characters) (KI-010).
+    **Then** no account is created and they see "Username is too short (minimum is 2
+    characters)" (KI-010).
 
 ---
 
@@ -174,15 +176,15 @@ content and the header for each state.
 
 - Leading or trailing spaces in the email on Sign Up or Log In are removed (KI-001).
 - The same email entered with different letter case (e.g. `Alice@Example.com` vs
-  `alice@example.com`) is the same account: signing up again with it shows "This email cannot be
-  used", and logging in with either works (KI-001).
+  `alice@example.com`) is the same account: signing up again with it shows "Email cannot be used",
+  and logging in with either works (KI-001).
 - A logged-in user visiting the Sign Up page is taken to the home page (KI-003).
 - A failed Log In clears the entered email (the original redirects back to an empty form);
   this is reproduced.
 - Very long passwords: passwords longer than 72 characters, or longer than the password
   storage limit of 72 bytes, are rejected with an error rather than silently shortened
   (KI-004).
-- An email in an invalid format (e.g. `alice`) is rejected with "is invalid", even if the
+- An email in an invalid format (e.g. `alice`) is rejected with "Email is invalid", even if the
   browser's own check is bypassed (KI-005).
 - Usernames that differ only in letter case (`Alice` and `alice`) count as the same username
   for uniqueness, but each is shown as the user typed it (KI-009).
@@ -222,7 +224,7 @@ Where this app deliberately behaves differently from the original.
   72 bytes are also rejected, with an error (FR-003).
 - **KI-005 – No email format check on the server**: the original relies only on the browser's
   email field. Decision: **fix** – the email format is also checked on the server, and an
-  invalid email is rejected with an "is invalid" error (FR-002a).
+  invalid email is rejected with "Email is invalid" (FR-002a).
 - **KI-006 – Session not renewed on log in**: the original keeps the same session identifier
   before and after logging in. Decision: **fix** – a new session is started on log in and log
   out (a security improvement with no visible change) (FR-012a).
@@ -240,6 +242,10 @@ Where this app deliberately behaves differently from the original.
 - **KI-010 – No length limits for email or username**: the original accepts values of any
   length. Decision: **fix** – email is limited to 254 characters (the longest the email
   standards allow) and username to 2–20 characters (FR-002b).
+- **KI-014 – Error messages do not name the field**: the original shows only the message next
+  to each field (e.g. "can't be blank"). Decision: **fix** – each message starts with the
+  field's name (e.g. "Email can't be blank"); the password confirmation is named "Confirm
+  Password", as its label (FR-007).
 
 ### Accepted behavior
 
@@ -249,7 +255,7 @@ a message).
 - **KI-011 – Sign Up shows when an email is already registered**: the original shows "has
   already been taken" on Email, so anyone can check whether an email has an account. Hiding it
   fully would need an email confirmation step the original does not have. Decision:
-  **reproduce**, but change the message to "This email cannot be used" (FR-004a).
+  **reproduce**, but change the message to "Email cannot be used" (FR-004a).
 - **KI-012 – No server-side session timeout**: a session only ends on log out or when the
   browser is closed, and browsers that restore tabs can keep it alive for a long time.
   Decision: **reproduce**.
@@ -266,7 +272,7 @@ a message).
   and a password confirmation.
 - **FR-002**: Email, username, password and password confirmation MUST all be required.
 - **FR-002a**: The email MUST be in a valid email format, checked on the server; an invalid
-  email MUST be rejected with an "is invalid" error (KI-005).
+  email MUST be rejected with "Email is invalid" (KI-005).
 - **FR-002b**: The email MUST be no more than 254 characters, and the username MUST be 2–20
   characters (KI-010).
 - **FR-003**: The password MUST be 8–72 characters and no more than 72 bytes (KI-004), and
@@ -274,14 +280,14 @@ a message).
 - **FR-004**: Email and username MUST each be unique across all accounts. Emails MUST be stored
   in lowercase with surrounding spaces removed, so uniqueness ignores letter case (KI-001).
   Username uniqueness MUST ignore letter case, while usernames are shown as typed (KI-009).
-- **FR-004a**: Signing up with an email that already has an account MUST show the error "This
-  email cannot be used" on Email (KI-011).
+- **FR-004a**: Signing up with an email that already has an account MUST show the error "Email
+  cannot be used" (KI-011).
 - **FR-005**: Passwords MUST be stored so that they cannot be read back (one-way protected), and
   MUST never be shown or re-filled in forms.
 - **FR-006**: On successful sign up the visitor MUST be taken to the Log In page with the message
   "You have joined Bookchange, you can now log in." and MUST NOT be logged in automatically.
 - **FR-007**: On failed sign up the form MUST be shown again with an error next to each invalid
-  field and the non-password values kept.
+  field, starting with the field's name (KI-014), and the non-password values kept.
 
 **Log in and log out**
 
@@ -355,8 +361,8 @@ a message).
 - **Sign Up form labels**: "Email", "Username", "Password", "Confirm Password" and a "Sign Up"
   button; Log In form: "Email", "Password" and a "Log In" button, as in the original.
 - **Error messages** use the standard wording shown in the original ("can't be blank", "doesn't
-  match Password", "is too short (minimum is 8 characters)", "has already been taken"), except the
-  duplicate email message (KI-011).
+  match Password", "is too short (minimum is 8 characters)", "has already been taken"), after
+  the field's name (KI-014), except the duplicate email message (KI-011).
 - **No account token**: the original also generated a random token for each user on sign up; it
   is only used for password reset, so it is left to roadmap feature 14.
 - **Session length**: the session lasts until log out or the browser is closed, as in the
