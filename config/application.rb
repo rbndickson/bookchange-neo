@@ -38,5 +38,8 @@ module Bookchange
 
     # Don't generate system test files.
     config.generators.system_tests = nil
+
+    # Leave invalid fields unwrapped; forms show Bootstrap error styles instead.
+    config.action_view.field_error_proc = proc { |html_tag, _instance| html_tag }
   end
 end

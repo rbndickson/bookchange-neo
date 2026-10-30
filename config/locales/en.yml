@@ -48,3 +48,6 @@ en:
     create:
       failed: "Log in error, please try again."
       rate_limited: "Try again later."
+  users:
+    create:
+      joined: "You have joined Bookchange, you can now log in."
