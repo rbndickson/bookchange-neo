@@ -44,3 +44,7 @@ en:
   access_denied:
     logged_in: "You do not have access."
     not_logged_in: "You must be logged in to do that."
+  sessions:
+    create:
+      failed: "Log in error, please try again."
+      rate_limited: "Try again later."
