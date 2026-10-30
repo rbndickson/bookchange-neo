@@ -29,3 +29,27 @@
 
 en:
   hello: "Hello world"
+  activerecord:
+    attributes:
+      user:
+        password_confirmation: "Confirm Password"
+    errors:
+      models:
+        user:
+          attributes:
+            email:
+              taken: "cannot be used"
+            password:
+              password_too_long: "is too long (maximum is 72 characters)"
+  access_denied:
+    logged_in: "You do not have access."
+    not_logged_in: "You must be logged in to do that."
+  sessions:
+    create:
+      failed: "Log in error, please try again."
+      rate_limited: "Try again later."
+    destroy:
+      logged_out: "You have logged out."
+  users:
+    create:
+      joined: "You have joined Bookchange, you can now log in."

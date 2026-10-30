@@ -1,0 +1,33 @@
+<nav class="navbar border-bottom mb-4">
+  <div class="container">
+    <%= link_to (logged_in? ? home_path : root_path), class: "navbar-brand" do %>
+      <i class="bi bi-book text-primary" aria-hidden="true"></i>
+      Bookchange
+    <% end %>
+
+    <% if logged_in? %>
+      <div class="dropdown">
+        <button
+          type="button"
+          class="btn btn-outline-primary dropdown-toggle"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          <i class="bi bi-person" aria-hidden="true"></i>
+          <%= current_user.username %>
+        </button>
+
+        <ul class="dropdown-menu dropdown-menu-end">
+          <li>
+            <%= button_to "Log Out", logout_path, method: :delete, class: "dropdown-item" %>
+          </li>
+        </ul>
+      </div>
+    <% else %>
+      <div class="d-flex gap-2">
+        <%= link_to "Sign Up", signup_path, class: "btn btn-outline-primary" %>
+        <%= link_to "Log In", login_path, class: "btn btn-outline-primary" %>
+      </div>
+    <% end %>
+  </div>
+</nav>

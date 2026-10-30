@@ -1,0 +1,5 @@
+<% if record.errors[attribute].any? %>
+  <div class="invalid-feedback d-block">
+    <%= record.errors.full_messages_for(attribute).join(", ") %>
+  </div>
+<% end %>
